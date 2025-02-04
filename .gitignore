@@ -1,0 +1,46 @@
+# Unity3D generated meta files
+*.pidb.meta
+*.pdb.meta
+*.mdb.meta
+
+# Unity3D generated file on crash reports
+sysinfo.txt
+
+# Builds
+/Build
+/Temp
+/obj
+/bin
+
+# Visual Studio cache directory
+.vs/
+
+# Visual Studio profiler
+*.psess
+
+# Visual Studio Solution user options
+*.suo
+
+# Visual Studio history folder
+History/
+
+# MonoDevelop generated files
+*.userprefs
+
+# Unity3D generated meta files
+*.meta
+
+# Unity3D generated file on crash reports
+sysinfo.txt
+
+# Log files
+*.log
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
