@@ -1,0 +1,26 @@
+ManifestFileVersion: 0
+CRC: 3376271984
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 652f5013f348cb1c2c1eff54f469ded6
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2d8df09e698f722ada1caa03d3413830
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 652f5013f348cb1c2c1eff54f469ded6
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Resources/HeroImage/Hero3.png
+- Assets/Resources/HeroImage/Hero4.png
+- Assets/Resources/HeroImage/Hero2.png
+- Assets/Resources/HeroImage/Hero1.png
+- Assets/Resources/HeroImage/Hero5.png
+Dependencies: []
