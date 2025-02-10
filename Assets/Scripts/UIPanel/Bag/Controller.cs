@@ -154,7 +154,7 @@ public class BackPackCtrl : BasePanel
         {
             for(int i=1;i<=5; i++)
             {
-                if (GameManager.Instance.GetDeployHeroDic()[i]!=null)
+                if (GameManager.Instance.GetDeployHeroDic().ContainsKey(i)&&GameManager.Instance.GetDeployHeroDic()[i]!=null)
                 {
                     UIDeployButtonArr[i - 1].GetComponent<DeployButtonView>().Refresh(GameManager.Instance.GetDeployHeroDic()[i]);
                 }
