@@ -1,10 +1,10 @@
+# Unity3D generated file on crash reports
+sysinfo.txt
+
 # Unity3D generated meta files
 *.pidb.meta
 *.pdb.meta
 *.mdb.meta
-
-# Unity3D generated file on crash reports
-sysinfo.txt
 
 # Builds
 /Build
@@ -28,9 +28,6 @@ History/
 
 # MonoDevelop generated files
 *.userprefs
-
-# Unity3D generated meta files
-*.meta
 
 # Unity3D generated file on crash reports
 sysinfo.txt
