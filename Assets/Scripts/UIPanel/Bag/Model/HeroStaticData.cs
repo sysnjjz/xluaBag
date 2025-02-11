@@ -1,6 +1,5 @@
-/// <summary>
-/// 英雄的静态数据 配表用的 是英雄的设定集
-/// </summary>
+using System.Collections.Generic;
+using UnityEngine;
 
 public enum HeroType
 {
@@ -16,6 +15,7 @@ public enum HeroGrade
     Legendary=5
 }
 
+
 [System.Serializable]
 public class Hero 
 {
@@ -26,4 +26,52 @@ public class Hero
     public string keyword;
     public string ImgPath;
     public string PrefabPath;
+}
+
+/// <summary>
+/// 英雄的静态数据 是英雄的设定集
+/// </summary>
+public class HeroStaticData
+{
+    //单例
+    private static HeroStaticData instance;
+
+    public static HeroStaticData Instance
+    {
+        get
+        {
+            if (instance == null)
+            {
+                instance = new HeroStaticData();
+            }
+            return instance;
+        }
+    }
+
+    //英雄设定表
+    private HeroTable heroTable;
+
+    //加载静态数据
+    public HeroTable GetHeroTable()
+    {
+        if (heroTable == null)
+        {
+            heroTable = Resources.Load<HeroTable>("Table/HeroTable");
+        }
+        return heroTable;
+    }
+
+    //根据id拿到指定静态数据
+    public Hero GetHeroById(int id)
+    {
+        List<Hero> HeroList = GetHeroTable().HeroList;
+        foreach (Hero hero in HeroList)
+        {
+            if (hero.id == id)
+            {
+                return hero;
+            }
+        }
+        return null;
+    }
 }

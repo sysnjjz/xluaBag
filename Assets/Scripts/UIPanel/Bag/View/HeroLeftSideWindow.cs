@@ -1,20 +1,20 @@
-///
-/// 这里写的是英雄背包中的子控件 主要是单个英雄框框的逻辑
-///
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HeroCtrl : MonoBehaviour
+///
+/// 子控件：单独一个英雄背包栏中的英雄视图逻辑
+///
+public class HeroLeftSideWindow : MonoBehaviour
 {
     //UI组件
-    private Transform Grade;
-    private Transform Type;
+    private Text Grade;
+    private Image Type;
     private Transform Star;
     private Transform IsNew;
+    private Image image;
 
-    private HeroLocalItem HeroLocalData;
-    private Hero HeroTableData;
-    private BackPackCtrl uiParent;
+    HeroLocalItem heroLocalData;
+    BagController bagController;
 
     private void Awake()
     {
@@ -23,48 +23,45 @@ public class HeroCtrl : MonoBehaviour
 
     private void Init()
     {
-        UIInit();
-        ClickInit();
-    }
-
-    private void UIInit()
-    {
-        Grade = transform.Find("Grade");
-        Type = transform.Find("Type");
+        Grade = transform.Find("Grade").GetComponent<Text>();
+        Type = transform.Find("Type").gameObject.GetComponent<Image>();
         Star = transform.Find("Star");
         IsNew = transform.Find("IsNew");
+        image = this.GetComponent<Image>();
+
+        this.GetComponent<Button>().onClick.AddListener(OnClickShowHero);
     }
 
     //更新预制体信息
-    public void Refresh(HeroLocalItem HeroLocalData,BackPackCtrl uiParent)
+    public void Refresh(HeroLocalItem heroLocalData,BagController bagController)
     {
-        //数据初始化
-        this.HeroLocalData=HeroLocalData;
-        this.HeroTableData = GameManager.Instance.GetHeroById(HeroLocalData.id);
-        this.uiParent = uiParent;
+        //显示的英雄
+        this.heroLocalData = heroLocalData;
+        Hero hero = HeroStaticData.Instance.GetHeroById(heroLocalData.id);
+        this.bagController = bagController;
 
         //稀有度信息
-        Grade.GetComponent<Text>().text = HeroTableData.rarity.ToString();
+        Grade.text = hero.rarity.ToString();
         //是否显示新获得
-        IsNew.gameObject.SetActive(this.HeroLocalData.IsNew);
+        IsNew.gameObject.SetActive(heroLocalData.IsNew);
         //显示人物图片
-        Texture2D pic1 = (Texture2D)Resources.Load(this.HeroTableData.ImgPath);
+        Texture2D pic1 = (Texture2D)Resources.Load(hero.ImgPath);
         Sprite tmp1 = Sprite.Create(pic1, new Rect(0, 0, pic1.width, pic1.height), new Vector2(0, 0));
-        this.GetComponent<Image>().sprite = tmp1;
+        image.sprite = tmp1;
         //显示类别图片
-        Texture2D pic2 = (Texture2D)Resources.Load("Icon/"+HeroTableData.type.ToString());
+        Texture2D pic2 = (Texture2D)Resources.Load("Icon/"+hero.type.ToString());
         Sprite tmp2 = Sprite.Create(pic2, new Rect(0, 0, pic2.width, pic2.height), new Vector2(0, 0));
-        Type.gameObject.GetComponent<Image>().sprite = tmp2;
+        Type.sprite = tmp2;
         //显示星级
-        RefreshStars();
+        RefreshStars(hero);
     }
 
-    public void RefreshStars()
+    public void RefreshStars(Hero hero)
     {
         for(int i=0;i<Star.childCount;i++)
         {
             Transform uistar=Star.GetChild(i);
-            if((int)(this.HeroTableData.rarity)>i)
+            if((int)(hero.rarity)>i)
             {
                 uistar.gameObject.SetActive(true);
             }
@@ -75,18 +72,13 @@ public class HeroCtrl : MonoBehaviour
         }
     }
 
-    private void ClickInit()
-    {
-        this.GetComponent<Button>().onClick.AddListener(OnClickShowHero);
-    }
-
-    //点一下 播放人物攻击动画
+    //更改展示的人物
     private void OnClickShowHero()
     {
-        print("show hero");
-        //重复点击不改变动画
-        if (this.uiParent.chooseUid == this.HeroLocalData.uid) return;
-        //根据点击换新动画
-        this.uiParent.chooseUid = this.HeroLocalData.uid;
+        if (bagController == null || this.heroLocalData == null) return;
+        //重复点击不更改
+        if (bagController.chooseUid == this.heroLocalData.uid) return;
+        //不同则更改
+        bagController.chooseUid = this.heroLocalData.uid;
     }
 }

@@ -1,11 +1,9 @@
+using System.Collections.Generic;
+using UnityEngine;
+
 ///
 /// 英雄动态数据集，存储玩家有的英雄数据
 ///
-using System.Collections.Generic;
-using Unity.VisualScripting.Antlr3.Runtime.Misc;
-using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
-
 public class HeroLocalData
 {
     //单例
@@ -56,6 +54,54 @@ public class HeroLocalData
             LocalDataList = new List<HeroLocalItem>();
             return LocalDataList;
         }
+    }
+
+    //根据uid拿到指定动态数据
+    public HeroLocalItem GetHeroLocalDataByUId(string uid)
+    {
+        List<HeroLocalItem> HeroLocalDataList = LoadData();
+        foreach (HeroLocalItem HeroLocalData in HeroLocalDataList)
+        {
+            if (HeroLocalData.uid == uid)
+            {
+                return HeroLocalData;
+            }
+        }
+        return null;
+    }
+
+    ///获得排好序的数据
+    public List<HeroLocalItem> GetSortHeroLocalData()
+    {
+        List<HeroLocalItem> HeroLocalDatas = HeroLocalData.Instance.LoadData();
+        if (HeroLocalDatas.Count == 0)
+        {
+            Debug.Log("CANNOT GET DATA");
+            return null;
+        }
+        HeroLocalDatas.Sort(new HeroItemComparer());
+        return HeroLocalDatas;
+    }
+}
+
+public class HeroItemComparer : IComparer<HeroLocalItem>
+{
+    public int Compare(HeroLocalItem a, HeroLocalItem b)
+    {
+        Hero x = HeroStaticData.Instance.GetHeroById(a.id);
+        Hero y = HeroStaticData.Instance.GetHeroById(b.id);
+
+        //按照稀有度排序
+        int rarityComparision = y.rarity.CompareTo(x.rarity);
+
+        //同级英雄按id排序
+        if (rarityComparision == 0)
+        {
+            int idComparision = y.id.CompareTo(x.id);
+            return idComparision;
+        }
+
+        return rarityComparision;
     }
 }
 

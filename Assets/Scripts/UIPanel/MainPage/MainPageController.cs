@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MainUI:BasePanel
+public class MainPageController:BasePanel
 {
     //UI¿Ø¼þ
     private Button BagButton;

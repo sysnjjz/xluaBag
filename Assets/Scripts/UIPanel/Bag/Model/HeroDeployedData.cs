@@ -1,19 +1,21 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DeployedHero
+/// <summary>
+/// 上阵英雄数据
+/// </summary>
+public class HeroDeployedData
 {
     //单例
-    private static DeployedHero instance;
+    private static HeroDeployedData instance;
 
-    public static DeployedHero Instance
+    public static HeroDeployedData Instance
     {
         get
         {
             if (instance == null)
             {
-                instance = new DeployedHero();
+                instance = new HeroDeployedData();
             }
             return instance;
         }
@@ -22,7 +24,6 @@ public class DeployedHero
     //存取框架
     public Dictionary<int, HeroLocalItem> DeployHeroesDic;
 
-    //是否需要本地存取逻辑？
     //存到本地
     public void SaveDeployData()
     {
@@ -43,7 +44,7 @@ public class DeployedHero
         if (PlayerPrefs.HasKey("DeployHeroData"))
         {
             string InventoryJson = PlayerPrefs.GetString("DeployHeroData");
-            DeployedHero depolyedHero= JsonUtility.FromJson<DeployedHero>(InventoryJson);
+            HeroDeployedData depolyedHero= JsonUtility.FromJson<HeroDeployedData>(InventoryJson);
             DeployHeroesDic=depolyedHero.DeployHeroesDic;
             return DeployHeroesDic;
         }
@@ -53,5 +54,38 @@ public class DeployedHero
             DeployHeroesDic=new Dictionary<int, HeroLocalItem>();
             return DeployHeroesDic;
         }
+    }
+
+    //添加上阵英雄
+    public int AddDeployHero(int DeployID, HeroLocalItem AddHero)
+    {
+        Dictionary<int, HeroLocalItem> DeployHeroes = LoadDeployData();
+        int OriDeployID = 0;
+        bool replace = false;
+        foreach (var DeployHero in DeployHeroes)
+        {
+            //如果已经有同一个英雄出阵中，则新英雄是替换掉旧英雄，而不是直接上阵
+            if (DeployHero.Value.id == AddHero.id)
+            {
+                OriDeployID = DeployHero.Key;
+                DeployHeroes[OriDeployID] = AddHero;
+                DeployHero.Value.IsDeploy = false;
+                replace = true;
+                break;
+            }
+        }
+        if (!replace)
+        {
+            if (DeployHeroes.ContainsKey(DeployID))
+            {
+                DeployHeroes[DeployID].IsDeploy = false;
+                DeployHeroes[DeployID] = AddHero;
+            }
+            else
+            {
+                DeployHeroes.Add(DeployID, AddHero);
+            }
+        }
+        return OriDeployID;
     }
 }

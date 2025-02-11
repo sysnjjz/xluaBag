@@ -1,12 +1,10 @@
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
 ///
 /// UI管理器，统一管理游戏中会出现的各类UI
 ///
-using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.UIElements;
-
 public class UIManager
 {
     //单例
