@@ -22,7 +22,7 @@ public class CardDetailView : MonoBehaviour
         Star = transform.Find("Star");
         Type = transform.Find("Type").GetComponent<Image>();
         Name = transform.Find("Name").GetComponent<Text>();
-        image = this.GetComponent<Image>();
+        image = transform.GetComponent<Image>();
     }
 
     public void Refresh(HeroLocalItem heroLocalData)

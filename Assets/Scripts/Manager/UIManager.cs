@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 ///
 /// UI管理器，统一管理游戏中会出现的各类UI
@@ -10,16 +9,16 @@ public class UIManager
     //单例
     private static UIManager instance;
 
-    private Transform uiRoot;
+    public Transform uiRoot;
 
     //路径配置字典
     private Dictionary<string, string> pathDict;
     //预制件缓存字典
-    private Dictionary<string, GameObject> prefabDict;
+    public Dictionary<string, GameObject> prefabDict;
     //已打开界面缓存
     public Dictionary<string, BasePanel> panelDict;
     //已打开界面堆栈
-    public Stack<BasePanel> panelStack;
+    private Stack<BasePanel> panelStack;
 
     private UIManager()
     {
@@ -38,7 +37,7 @@ public class UIManager
     {
         get
         {
-            if(instance==null)
+            if (instance == null)
             {
                 instance = new UIManager();
             }
@@ -50,9 +49,9 @@ public class UIManager
     {
         get
         {
-            if(uiRoot==null)
+            if (uiRoot == null)
             {
-                if(GameObject.Find("Canvas"))
+                if (GameObject.Find("Canvas"))
                 {
                     uiRoot = GameObject.Find("Canvas").transform;
                 }
@@ -70,45 +69,27 @@ public class UIManager
     public BasePanel OpenPanel(string name)
     {
         BasePanel panel = null;
-        //已经打开的界面
-        if(panelDict.TryGetValue(name,out panel))
+
+        //已经打开的界面不打开
+        if (panelDict.TryGetValue(name, out panel))
         {
             return null;
         }
-
-        //找不到界面
+        //找不到界面也不打开
         string path = "";
-        if(!pathDict.TryGetValue(name,out path))
+        if (!pathDict.TryGetValue(name, out path))
         {
             return null;
         }
 
-        //使用预制体创造界面
-        GameObject panelPrefab = null;
-        if(!prefabDict.TryGetValue(name,out panelPrefab))
-        {
-            string realPath = "Prefab/Panel" + path;
-            panelPrefab = Resources.Load<GameObject>(realPath) as GameObject;
-            prefabDict.Add(name, panelPrefab );
-        }
-
-        //打开界面
-        GameObject panelObject = GameObject.Instantiate(panelPrefab, UIRoot, false);
-        //设置UI缩放模式
-        if (panelObject.GetComponent<CanvasScaler>()==null)
-        {
-            panelObject.AddComponent<CanvasScaler>();
-        }
-        panelObject.GetComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        panelObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1920, 1080);
-        panelObject.GetComponent<CanvasScaler>().matchWidthOrHeight = 0.5f;
-        panel = panelObject.GetComponent<BasePanel>();
-        panelDict.Add(name, panel );
+        //生成界面
+        UIFactory factory = new UIFactory();
+        panel = factory.CreatePanel(name, path);
 
         //设置下层界面不可见
         if (panelStack.Count != 0)
         {
-            panelStack.Peek().SetActive(false);
+            panelStack.Peek().SetOnShow(false);
         }
         panelStack.Push(panel);
 
@@ -120,18 +101,26 @@ public class UIManager
     {
         BasePanel panel = null;
         //没打开的不关
-        if(!panelDict.TryGetValue(name,out panel))
+        if (!panelDict.TryGetValue(name, out panel))
         {
             return false;
         }
 
-        panelStack.Pop();
+        panelStack.Peek().IsRemove = true;
+        panelStack.Peek().SetOnShow(false);
+        UnityEngine.Object.Destroy(panelStack.Pop().gameObject);
+
         //设置下层界面可见
         if (panelStack.Count != 0)
         {
-            panelStack.Peek().SetActive(true);
+            panelStack.Peek().SetOnShow(true);
         }
-        panel.ClosePanel(name);
+
+        //移除缓存
+        if (panelDict.ContainsKey(name))
+        {
+            panelDict.Remove(name);
+        }
 
         return true;
     }
@@ -142,7 +131,75 @@ public class UIConst
     public const string HeroBackPack = "HeroBackPack";
     public const string DrawCard = "DrawCard";
     public const string MainMenu = "MainMenu";
+} 
+
+public class UIFactory
+{
+    public BasePanel CreatePanel(string name,string path)
+    {
+        switch (name)
+        {
+            case UIConst.MainMenu:
+                MainPageView mainpagepanel = new MainPageView();
+
+                GameObject mainpagepanelPrefab = null;
+                if (!UIManager.Instance.prefabDict.TryGetValue(name, out mainpagepanelPrefab))
+                {
+                    mainpagepanel.BeforeInit(name, "Prefab/Panel" + path);
+                }
+                else
+                {
+                    mainpagepanel.gameObject = mainpagepanelPrefab;
+                }
+
+                //打开界面
+                mainpagepanel.Initial(name, UIManager.Instance.UIRoot);
+
+                MainPageController mainPageController = new MainPageController(mainpagepanel);
+
+                return mainpagepanel;
+
+            case UIConst.HeroBackPack:
+                HeroWholePageWindow bagPanel = new HeroWholePageWindow();
+
+                GameObject bagPanelPrefab = null;
+                if (!UIManager.Instance.prefabDict.TryGetValue(name, out bagPanelPrefab))
+                {
+                    bagPanel.BeforeInit(name, "Prefab/Panel" + path);
+                }
+                else
+                {
+                    bagPanel.gameObject = bagPanelPrefab;
+                }
+
+                //打开界面
+                bagPanel.Initial(name, UIManager.Instance.UIRoot);
+
+                BagController bagController = new BagController(bagPanel);
+
+                return bagPanel;
+
+            case UIConst.DrawCard:
+                CardView cardPanel = new CardView();
+
+                GameObject cardPanelPrefab = null;
+                if (!UIManager.Instance.prefabDict.TryGetValue(name, out cardPanelPrefab))
+                {
+                    cardPanel.BeforeInit(name, "Prefab/Panel" + path);
+                }
+                else
+                {
+                    cardPanel.gameObject = cardPanelPrefab;
+                }
+
+                //打开界面
+                cardPanel.Initial(name, UIManager.Instance.UIRoot);
+
+                CardController cardController = new CardController(cardPanel);
+
+                return cardPanel;
+            default:
+                return null;
+        }
+    }
 }
-
-
-

@@ -3,34 +3,41 @@
 ///
 using UnityEngine;
 
-public class BasePanel : MonoBehaviour
+public class BasePanel
 {
-    protected bool IsRemove = false;
+    public bool IsRemove = false;
+    public GameObject gameObject = null;
+    public Transform transform = null;
 
     protected virtual void Awake()
     {
     }
 
-    public virtual void SetActive(bool active)
+    public void BeforeInit(string name,string path)
+    {
+        gameObject = Resources.Load<GameObject>(path);
+        transform = gameObject.transform;
+        UIManager.Instance.prefabDict.Add(name, gameObject);
+    }
+
+    public void Initial(string name,Transform uiRoot)
+    {
+        gameObject = GameObject.Instantiate(gameObject, uiRoot, false);
+        transform = gameObject.transform;
+        gameObject.SetActive(true);
+        UIManager.Instance.panelDict.Add(name, this);
+    }
+
+    public virtual void SetOnShow(bool active)
     {
         gameObject.SetActive(active);
     }
 
     public virtual void OpenPanel(string name)
     {
-        SetActive(true);
     }
 
     public virtual void ClosePanel(string name) 
     {
-        IsRemove = true;
-        SetActive(false);
-        Destroy(gameObject);
-
-        //ÒÆ³ý»º´æ
-        if(UIManager.Instance.panelDict.ContainsKey(name))
-        {
-            UIManager.Instance.panelDict.Remove(name);
-        }
     }
 }

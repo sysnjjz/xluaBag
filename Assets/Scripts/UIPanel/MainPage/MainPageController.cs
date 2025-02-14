@@ -1,44 +1,29 @@
 ///
 /// 主界面逻辑
 ///
-using UnityEngine;
-using UnityEngine.UI;
 
-public class MainPageController:BasePanel
+public class MainPageController
 {
-    //UI控件
-    private Button BagButton;
-    private Button CardButton;
-    private Button ExitButton;
+    private MainPageView mainPageView;
 
-    private void Awake()
+    public MainPageController(MainPageView view)
     {
-        base.Awake();
-        Init();
+        mainPageView = view;
+        view.controller = this;
+        mainPageView.Init();
     }
 
-    private void Init()
-    {
-        BagButton=transform.Find("Bag").GetComponent<Button>();
-        CardButton=transform.Find("Card").GetComponent <Button>();
-        ExitButton = transform.Find("Exit").GetComponent<Button>();
-
-        BagButton.onClick.AddListener(OnClickBag);
-        CardButton.onClick.AddListener(OnClickCard);
-        ExitButton.onClick.AddListener(OnClickExit);
-    }
-
-    private void OnClickBag()
+    public void OnClickBag()
     {
         UIManager.Instance.OpenPanel(UIConst.HeroBackPack);
     }
 
-    private void OnClickCard()
+    public void OnClickCard()
     {
         UIManager.Instance.OpenPanel(UIConst.DrawCard);
     }
 
-    private void OnClickExit()
+    public void OnClickExit()
     {
         #if UNITY_EDITOR
             UnityEditor.EditorApplication.isPlaying = false;

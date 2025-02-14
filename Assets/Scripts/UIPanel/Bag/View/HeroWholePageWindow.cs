@@ -54,15 +54,9 @@ public class HeroWholePageWindow : BasePanel
     public HeroDownWindow[] UIDeployButtonArr;
 
     //控制器
-    BagController bagController;
+    public BagController controller;
 
-    //方法
-    override protected void Awake()
-    {
-        Init();
-    }
-
-    private void Init()
+    public void Init()
     {
         UIInit();
         ClickInit();
@@ -70,6 +64,7 @@ public class HeroWholePageWindow : BasePanel
 
     private void UIInit()
     {
+        transform = this.gameObject.transform;
         //最左侧按键界面
         //UI控件 侧边栏按钮和关闭按钮
         UICloseButton = transform.Find("CloseButton");
@@ -119,12 +114,13 @@ public class HeroWholePageWindow : BasePanel
         UIDeployButtonArr[3] = UIDeployHero4;
         UIDeployButtonArr[4] = UIDeployHero5;
 
+        foreach (HeroDownWindow button in UIDeployButtonArr)
+        {
+            button.bagController = this.controller;
+        }
         //页面初始化
         UICodex.gameObject.SetActive(false);
         UIHeroBag.gameObject.SetActive(true);
-
-        //控制器
-        bagController=GetComponent<BagController>();
     }
 
     private void ClickInit()
@@ -132,15 +128,15 @@ public class HeroWholePageWindow : BasePanel
         //注册按键事件
         UICloseButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickClose();
+            controller.OnClickClose();
         }); 
         UIHeroButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickHero();
+            controller.OnClickHero();
         }); 
         UICodexButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickCodex();
+            controller.OnClickCodex();
         }); 
         UIShowHero.onClick.AddListener(() =>
         {
@@ -148,39 +144,39 @@ public class HeroWholePageWindow : BasePanel
         }); 
         UIPlusButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickPlus();
+            controller.OnClickPlus();
         }); 
         UIReferrerButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickReferrer();
+            controller.OnClickReferrer();
         }); 
         UIAllButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickAll();
+            controller.OnClickAll();
         }); 
         UIForceButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickForce();
+            controller.OnClickForce();
         });
         UIInnerForceButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickInnerForce();
+            controller.OnClickInnerForce();
         }); 
         UIHealButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickHeal();
+            controller.OnClickHeal();
         }); 
         UISwordButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickSword();
+            controller.OnClickSword();
         }); 
         UISkillButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.OnClickSkill();
+            controller.OnClickSkill();
         }); 
         UIUPButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            bagController.UpdateDeployHero();
+            controller.UpdateDeployHero();
         }); 
     }
 
@@ -206,9 +202,9 @@ public class HeroWholePageWindow : BasePanel
         //添加新的预制体
         NowPrefab = (GameObject)Resources.Load(hero.PrefabPath);
         quaternion ChildRotation = new quaternion(0, 180, 0, 0);
-        GameObject ShowHero = Instantiate(NowPrefab, ChildPosition, ChildRotation, UIHero);
-        ShowHero.transform.localScale = new Vector3(1100, 550, 550);
-        ShowHero.transform.SetSiblingIndex(UIHero.childCount - 1);
+        GameObject ShowHero = UnityEngine.Object.Instantiate(NowPrefab, ChildPosition, ChildRotation, UIHero);
+        ShowHero.transform.position=new Vector3 (0, 0, 0);
+        ShowHero.transform.localScale = new Vector3(900, 500, 450);
         //显示星级
         RefreshStars(hero);
     }
@@ -232,6 +228,7 @@ public class HeroWholePageWindow : BasePanel
     //攻击动画
     public void Attack()
     {
+        if (UIHero.childCount == 0) return;
         PlayerObj HeroPrefab = UIHero.GetChild(0).GetComponent<PlayerObj>();
         HeroPrefab.SetStateAnimationIndex(PlayerState.ATTACK);
         HeroPrefab.PlayStateAnimation(PlayerState.ATTACK);

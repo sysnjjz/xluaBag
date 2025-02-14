@@ -10,32 +10,26 @@ public class CardView:BasePanel
     public Transform CardList;
 
     //¿ØÖÆÆ÷
-    CardController cardController;
+    public CardController controller;
 
-    private void Awake()
-    {
-        Init();
-    }
-    private void Init()
+    public void Init()
     {
         CloseButton = transform.Find("Panel/CloseButton");
         OneButton = transform.Find("Panel/One");
         TenButton = transform.Find("Panel/Ten");
         CardList = transform.Find("Panel/Card");
 
-        cardController = GetComponent<CardController>();
-
         CloseButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            cardController.OnClickClose();
+            controller.OnClickClose();
         });
         OneButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            cardController.OneCard();
+            controller.OneCard();
         }); 
         TenButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            cardController.TenCard();
+            controller.TenCard();
         }); 
     }
 }

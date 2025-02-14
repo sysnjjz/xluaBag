@@ -27,9 +27,9 @@ public class HeroLeftSideWindow : MonoBehaviour
         Type = transform.Find("Type").gameObject.GetComponent<Image>();
         Star = transform.Find("Star");
         IsNew = transform.Find("IsNew");
-        image = this.GetComponent<Image>();
+        image = transform.GetComponent<Image>();
 
-        this.GetComponent<Button>().onClick.AddListener(OnClickShowHero);
+        transform.GetComponent<Button>().onClick.AddListener(OnClickShowHero);
     }
 
     //更新预制体信息

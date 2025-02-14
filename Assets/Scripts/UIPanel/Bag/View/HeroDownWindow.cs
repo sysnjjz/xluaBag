@@ -15,7 +15,7 @@ public class HeroDownWindow : MonoBehaviour
     private Text ATK;
 
     //控制器脚本
-    BagController bagController;
+    public BagController bagController;
 
     private void Awake()
     {
@@ -24,17 +24,16 @@ public class HeroDownWindow : MonoBehaviour
 
     private void Init()
     {
-        UIImage = this.GetComponent<Image>();
-        UIButton = this.GetComponent<Button>();
+        UIImage = transform .GetComponent<Image>();
+        UIButton = transform.GetComponent<Button>();
         ATK = transform.Find("ATK").GetComponent<Text>();
         Image = transform.Find("Image").GetComponent<Image>();
 
         UIButton.onClick.AddListener(OnClickButton);
-        bagController = transform.parent.parent.parent.GetComponent<BagController>();
     }
 
     //更改当前选中物体
-    private void OnClickButton()
+    public void OnClickButton()
     {
         bagController.chooseBid = ButtonID;
     }

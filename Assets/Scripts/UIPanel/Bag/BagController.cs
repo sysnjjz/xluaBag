@@ -4,17 +4,16 @@ using UnityEngine;
 ///
 /// 用于整个背包界面的控制
 ///
-public class BagController : MonoBehaviour
+public class BagController
 {
     //预制件子物体
-    public GameObject HeroUIItemPrefab;
-    public GameObject HeroAnimationPrefab;
+    private GameObject HeroUIItemPrefab;
 
     //页面
     private HeroWholePageWindow WholePageView;
 
     //当前选中的格子
-    private string _chooseUid=Convert.ToString(-1);
+    private string _chooseUid = Convert.ToString(-1);
     public string chooseUid
     {
         get
@@ -49,20 +48,20 @@ public class BagController : MonoBehaviour
         }
     }
 
-    private void Awake()
+    public BagController(HeroWholePageWindow view)
     {
-        Init();
+        WholePageView = view;
+        view.controller = this;
+        view.Init();
         Initial();
-    }
-
-    private void Init()
-    {
-        WholePageView = GetComponent<HeroWholePageWindow>();
+        RefreshScrollView(HeroType.All);
+        RefreshDeployHero();
     }
 
     //初始化界面
     private void Initial()
     {
+        HeroUIItemPrefab = Resources.Load<GameObject>("UI/HeroDetail");
         if(HeroDeployedData.Instance.LoadDeployData().ContainsKey(1)&& HeroDeployedData.Instance.LoadDeployData()[1]!=null)
         {
             chooseUid = HeroDeployedData.Instance.LoadDeployData()[1].uid;
@@ -71,13 +70,6 @@ public class BagController : MonoBehaviour
         {
             chooseUid = HeroLocalData.Instance.LoadData()[0].uid;
         }
-    }
-
-    //方法
-    private void Start()
-    {
-        RefreshScrollView(HeroType.All);
-        RefreshDeployHero();
     }
 
     //刷新上阵英雄
@@ -102,24 +94,24 @@ public class BagController : MonoBehaviour
         RectTransform scrollContent = WholePageView.UIHeroContent.content;
         for(int i=0;i<scrollContent.childCount;i++)
         {
-            Destroy(scrollContent.GetChild(i).gameObject);
+            UnityEngine.Object.Destroy(scrollContent.GetChild(i).gameObject);
         }
         //显示已获得英雄
-        if (HeroLocalData.Instance.GetSortHeroLocalData() == null) return;
+        if (HeroLocalData.Instance.GetSortHeroLocalData() == null)  return;
         //分类显示
         foreach(HeroLocalItem HeroLocalData in HeroLocalData.Instance.GetSortHeroLocalData())
         {
             switch (heroType)
             {
                 case HeroType.All:
-                    Transform HeroUIItem = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                    Transform HeroUIItem = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                     HeroLeftSideWindow heroCell = HeroUIItem.GetComponent<HeroLeftSideWindow>();
                     heroCell.Refresh(HeroLocalData, this);
                     break;
                 case HeroType.Force:
                     if(HeroStaticData.Instance.GetHeroById(HeroLocalData.id).type==HeroType.Force)
                     {
-                        Transform HeroUIItem1 = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                        Transform HeroUIItem1 = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                         HeroLeftSideWindow heroCell1 = HeroUIItem1.GetComponent<HeroLeftSideWindow>();
                         heroCell1.Refresh(HeroLocalData, this);
                     }
@@ -127,7 +119,7 @@ public class BagController : MonoBehaviour
                 case HeroType.InnerForce:
                     if (HeroStaticData.Instance.GetHeroById(HeroLocalData.id).type == HeroType.InnerForce)
                     {
-                        Transform HeroUIItem1 = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                        Transform HeroUIItem1 = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                         HeroLeftSideWindow heroCell1 = HeroUIItem1.GetComponent<HeroLeftSideWindow>();
                         heroCell1.Refresh(HeroLocalData, this);
                     }
@@ -135,7 +127,7 @@ public class BagController : MonoBehaviour
                 case HeroType.Heal:
                     if (HeroStaticData.Instance.GetHeroById(HeroLocalData.id).type == HeroType.Heal)
                     {
-                        Transform HeroUIItem1 = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                        Transform HeroUIItem1 = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                         HeroLeftSideWindow heroCell1 = HeroUIItem1.GetComponent<HeroLeftSideWindow>();
                         heroCell1.Refresh(HeroLocalData, this);
                     }
@@ -143,7 +135,7 @@ public class BagController : MonoBehaviour
                 case HeroType.Sword:
                     if (HeroStaticData.Instance.GetHeroById(HeroLocalData.id).type == HeroType.Sword)
                     {
-                        Transform HeroUIItem1 = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                        Transform HeroUIItem1 = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                         HeroLeftSideWindow heroCell1 = HeroUIItem1.GetComponent<HeroLeftSideWindow>();
                         heroCell1.Refresh(HeroLocalData, this);
                     }
@@ -151,7 +143,7 @@ public class BagController : MonoBehaviour
                 case HeroType.Skill:
                     if (HeroStaticData.Instance.GetHeroById(HeroLocalData.id).type == HeroType.Skill)
                     {
-                        Transform HeroUIItem1 = Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
+                        Transform HeroUIItem1 = UnityEngine.Object.Instantiate(HeroUIItemPrefab.transform, scrollContent) as Transform;
                         HeroLeftSideWindow heroCell1 = HeroUIItem1.GetComponent<HeroLeftSideWindow>();
                         heroCell1.Refresh(HeroLocalData, this);
                     }
@@ -189,47 +181,47 @@ public class BagController : MonoBehaviour
 
     public void OnClickPlus()
     {
-        print("plus capcity");
+        Debug.Log("plus capcity");
     }
 
     public void OnClickReferrer()
     {
-        print("show referrer");
+        Debug.Log("show referrer");
     }
 
     public void OnClickAll()
     {
-        print("filter all");
+        Debug.Log("filter all");
         RefreshScrollView(HeroType.All);
     }
 
     public void OnClickForce()
     {
-        print("filter force");
+        Debug.Log("filter force");
         RefreshScrollView(HeroType.Force);
     }
 
     public void OnClickInnerForce()
     {
-        print("filter innerforce");
+        Debug.Log("filter innerforce");
         RefreshScrollView(HeroType.InnerForce);
     }
 
     public void OnClickHeal()
     {
-        print("filter heal");
+        Debug.Log("filter heal");
         RefreshScrollView(HeroType.Heal);
     }
 
     public void OnClickSword()
     {
-        print("filter sword");
+        Debug.Log("filter sword");
         RefreshScrollView(HeroType.Sword);
     }
 
     public void OnClickSkill()
     {
-        print("filter skill");
+        Debug.Log("filter skill");
         RefreshScrollView(HeroType.Skill);
     }
 
