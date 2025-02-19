@@ -4,7 +4,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class CardDetailView : MonoBehaviour
+public class CardDetailView : BasePanel
 {
     //UI控件
     private Transform Star;
@@ -12,11 +12,25 @@ public class CardDetailView : MonoBehaviour
     private Text Name;
     private Image image;
 
-    private void Awake()
+    public CardDetailView(GameObject panel, Transform uiRoot)
     {
+        gameObject = panel;
+        OpenPanel(uiRoot);
         Init();
     }
 
+    //打开逻辑
+    public override void OpenPanel(Transform uiRoot)
+    {
+        gameObject = GameObject.Instantiate(gameObject, uiRoot, false);
+        transform = gameObject.transform;
+    }
+
+    public override void ClosePanel()
+    {
+    }
+
+    //初始化
     private void Init()
     {
         Star = transform.Find("Star");
@@ -24,11 +38,10 @@ public class CardDetailView : MonoBehaviour
         Name = transform.Find("Name").GetComponent<Text>();
         image = transform.GetComponent<Image>();
     }
-
-    public void Refresh(HeroLocalItem heroLocalData)
+    
+    //刷新逻辑
+    public void Refresh(HeroLocalItem heroLocalData,Hero hero)
     {
-        Hero hero = HeroStaticData.Instance.GetHeroById(heroLocalData.id);
-
         //显示类别图片
         Texture2D pic = (Texture2D)Resources.Load("Icon/" + hero.type.ToString());
         Sprite tmp = Sprite.Create(pic, new Rect(0, 0, pic.width, pic.height), new Vector2(0, 0));

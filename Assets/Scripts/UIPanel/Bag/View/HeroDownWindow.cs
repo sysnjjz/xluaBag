@@ -4,7 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 子控件：单独一个上阵英雄格子的视图逻辑
 /// </summary>
-public class HeroDownWindow : MonoBehaviour
+public class HeroDownWindow : BasePanel
 {
     //自身属性
     public int ButtonID;
@@ -17,13 +17,26 @@ public class HeroDownWindow : MonoBehaviour
     //控制器脚本
     public BagController bagController;
 
-    private void Awake()
+    //构造函数
+    public HeroDownWindow(GameObject panel,Transform uiRoot,int buttonID)
     {
-        Init();
+        gameObject = panel;
+        OpenPanel(uiRoot);
+        Init(buttonID);
     }
 
-    private void Init()
+    //打开界面
+    public override void OpenPanel(Transform uiRoot)
     {
+        gameObject = GameObject.Instantiate(gameObject, uiRoot, false);
+        transform = gameObject.transform;
+    }
+
+    //初始化
+    private void Init(int buttonID)
+    {
+        ButtonID = buttonID;
+
         UIImage = transform .GetComponent<Image>();
         UIButton = transform.GetComponent<Button>();
         ATK = transform.Find("ATK").GetComponent<Text>();
@@ -50,10 +63,8 @@ public class HeroDownWindow : MonoBehaviour
     }
 
     //更改显示对象
-    public void Refresh(HeroLocalItem heroLocalData)
+    public void Refresh(HeroLocalItem heroLocalData,Hero hero)
     {
-        //显示的英雄
-        Hero hero = HeroStaticData.Instance.GetHeroById(heroLocalData.id);
         //显示图片
         Texture2D pic = (Texture2D)Resources.Load(hero.ImgPath);
         Sprite tmp = Sprite.Create(pic, new Rect(0, 0, pic.width, pic.height), new Vector2(0, 0));

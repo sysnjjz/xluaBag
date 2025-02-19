@@ -1,34 +1,38 @@
+using UnityEngine;
+
 ///
 /// 主界面逻辑
 ///
-
 public class MainPageController
 {
     private MainPageView mainPageView;
 
-    public MainPageController(MainPageView view)
+    public MainPageController()
     {
-        mainPageView = view;
-        view.controller = this;
+        CreatePanel();
+        ShowPanel();
+    }
+
+    //缓存控制的视图
+    private void CreatePanel()
+    {
+        mainPageView = new MainPageView();
+        GameObject mainpagepanelPrefab = null;
+        if (!UIManager.Instance.prefabDict.TryGetValue(UIManager.Instance.pathDict[UIConst.MainMenu], out mainpagepanelPrefab))
+        {
+            mainPageView.BeforeInit(UIManager.Instance.pathDict[UIConst.MainMenu], "Prefab/Panel" + UIManager.Instance.pathDict[UIConst.MainMenu]);
+        }
+        else
+        {
+            mainPageView.gameObject = mainpagepanelPrefab;
+        }
+    }
+
+    //显示控制的视图
+    private void ShowPanel()
+    {
+        mainPageView.OpenPanel(UIManager.Instance.UIRoot);
+        mainPageView.controller = this;
         mainPageView.Init();
-    }
-
-    public void OnClickBag()
-    {
-        UIManager.Instance.OpenPanel(UIConst.HeroBackPack);
-    }
-
-    public void OnClickCard()
-    {
-        UIManager.Instance.OpenPanel(UIConst.DrawCard);
-    }
-
-    public void OnClickExit()
-    {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
     }
 }

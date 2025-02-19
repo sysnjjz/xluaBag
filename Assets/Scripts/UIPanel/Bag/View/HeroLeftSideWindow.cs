@@ -4,7 +4,7 @@ using UnityEngine.UI;
 ///
 /// 子控件：单独一个英雄背包栏中的英雄视图逻辑
 ///
-public class HeroLeftSideWindow : MonoBehaviour
+public class HeroLeftSideWindow : BasePanel
 {
     //UI组件
     private Text Grade;
@@ -16,11 +16,22 @@ public class HeroLeftSideWindow : MonoBehaviour
     HeroLocalItem heroLocalData;
     BagController bagController;
 
-    private void Awake()
+    //构造函数
+    public HeroLeftSideWindow(GameObject panel,Transform uiRoot)
     {
+        gameObject = panel;
+        OpenPanel(uiRoot);
         Init();
     }
 
+    //打开逻辑
+    public override void OpenPanel(Transform uiRoot)
+    {
+        gameObject = GameObject.Instantiate(gameObject, uiRoot, false);
+        transform = gameObject.transform;
+    }
+
+    //初始化
     private void Init()
     {
         Grade = transform.Find("Grade").GetComponent<Text>();
@@ -33,11 +44,10 @@ public class HeroLeftSideWindow : MonoBehaviour
     }
 
     //更新预制体信息
-    public void Refresh(HeroLocalItem heroLocalData,BagController bagController)
+    public void Refresh(HeroLocalItem heroLocalData,Hero hero,BagController bagController)
     {
         //显示的英雄
         this.heroLocalData = heroLocalData;
-        Hero hero = HeroStaticData.Instance.GetHeroById(heroLocalData.id);
         this.bagController = bagController;
 
         //稀有度信息

@@ -67,7 +67,6 @@ public class GameManager : MonoBehaviour
             Save save = (Save)bf.Deserialize(file);
             file.Close();
 
-
             //¸³Öµ
             HeroLocalData.Instance.LocalDataList = save.HeroLocalDataSave;
             HeroDeployedData.Instance.DeployHeroesDic = save.DeployHeroesSave;

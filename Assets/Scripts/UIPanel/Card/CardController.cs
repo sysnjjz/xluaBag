@@ -6,16 +6,33 @@ using UnityEngine;
 ///
 public class CardController
 {
-    //子控件
-    public CardDetailView cardDetail;
     private CardView cardView;
 
-    public CardController(CardView view)
+    public CardController()
     {
-        cardDetail = Resources.Load<GameObject>("UI/Image").GetComponent<CardDetailView>();
-        cardView = view;
-        view.controller = this;
-        view.Init();
+        CreatePanel();
+        ShowPanel();
+    }
+
+    private void CreatePanel()
+    {
+        cardView = new CardView();
+        GameObject cardPanelPrefab = null;
+        if (!UIManager.Instance.prefabDict.TryGetValue(UIManager.Instance.pathDict[UIConst.DrawCard], out cardPanelPrefab))
+        {
+            cardView.BeforeInit(UIManager.Instance.pathDict[UIConst.DrawCard], "Prefab/Panel" + UIManager.Instance.pathDict[UIConst.DrawCard]);
+        }
+        else
+        {
+            cardView.gameObject = cardPanelPrefab;
+        }
+    }
+
+    private void ShowPanel()
+    {
+        cardView.OpenPanel(UIManager.Instance.UIRoot);
+        cardView.controller = this;
+        cardView.Init();
     }
 
     public void OnClickClose()
@@ -23,38 +40,21 @@ public class CardController
         UIManager.Instance.ClosePanel(UIConst.DrawCard);
     }
 
-    //抽一张卡UI显示逻辑
+    //抽一张卡UI
     public void OneCard()
     {
-        //销毁原有的
-        for(int i=0;i<cardView.CardList.childCount;i++)
-        {
-            UnityEngine.Object.Destroy(cardView.CardList.GetChild(i).gameObject);
-        }
         //抽一张卡
         HeroLocalItem hero = CardModel.Instance.GetRandomHero();
-        Transform newHeroDetailWindow = UnityEngine.Object.Instantiate(cardDetail.transform, cardView.CardList) as Transform;
-        newHeroDetailWindow.transform.localScale = new Vector3(0.8f,0.8f, 0.8f);
-        //显示逻辑
-        newHeroDetailWindow.GetComponent<CardDetailView>().Refresh(hero);
+        //显示一张卡
+        cardView.RefreshOneCard(hero, HeroStaticData.Instance.GetHeroById(hero.id));
     }
 
     //抽十张卡UI显示逻辑
     public void TenCard()
     {
-        //销毁原有的
-        for (int i = 0; i < cardView.CardList.childCount; i++)
-        {
-            UnityEngine.Object.Destroy(cardView.CardList.GetChild(i).gameObject);
-        }
         //抽十张卡
-        List<HeroLocalItem> heroList= CardModel.Instance.GetRandomHero10();
-        for(int i=0;i<heroList.Count;i++)
-        {
-            Transform newHeroDetailWindow = UnityEngine.Object.Instantiate(cardDetail.transform, cardView.CardList) as Transform;
-            newHeroDetailWindow.transform.localScale = new Vector3(0.8f, 0.8f, 0.8f);
-            //显示逻辑
-            newHeroDetailWindow.GetComponent<CardDetailView>().Refresh(heroList[i]);
-        }
+        List<HeroLocalItem> heroList = CardModel.Instance.GetRandomHero10();
+        //显示十张卡
+        cardView.TenCard(heroList);
     }
 }

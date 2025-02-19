@@ -43,19 +43,27 @@ public class HeroWholePageWindow : BasePanel
     Vector3 ChildPosition;
     //当前显示预制体
     private GameObject NowPrefab;
-
     //右下侧英雄上阵栏
     private Transform UIUPButton;
-    private HeroDownWindow UIDeployHero1;
-    private HeroDownWindow UIDeployHero2;
-    private HeroDownWindow UIDeployHero3;
-    private HeroDownWindow UIDeployHero4;
-    private HeroDownWindow UIDeployHero5;
+    public Transform UIDeployList;
+
     public HeroDownWindow[] UIDeployButtonArr;
+
+    //预制件子物体
+    public GameObject HeroUIItemPrefab;
+    public GameObject HeroDeployItem;
 
     //控制器
     public BagController controller;
+    
+    //打开界面
+    public override void OpenPanel(Transform uiRoot)
+    {
+        base.OpenPanel(uiRoot);
+        UIManager.Instance.panelDict.Add(UIConst.HeroBackPack, this);
+    }
 
+    //初始化
     public void Init()
     {
         UIInit();
@@ -64,7 +72,6 @@ public class HeroWholePageWindow : BasePanel
 
     private void UIInit()
     {
-        transform = this.gameObject.transform;
         //最左侧按键界面
         //UI控件 侧边栏按钮和关闭按钮
         UICloseButton = transform.Find("CloseButton");
@@ -101,23 +108,22 @@ public class HeroWholePageWindow : BasePanel
 
         //右下侧英雄上阵栏
         UIUPButton = transform.Find("Deploy/DeployButton");
-        UIDeployHero1 = transform.Find("Deploy/DeployList/DeployHero1").GetComponent<HeroDownWindow>();
-        UIDeployHero2 = transform.Find("Deploy/DeployList/DeployHero2").GetComponent<HeroDownWindow>();
-        UIDeployHero3 = transform.Find("Deploy/DeployList/DeployHero3").GetComponent<HeroDownWindow>();
-        UIDeployHero4 = transform.Find("Deploy/DeployList/DeployHero4").GetComponent<HeroDownWindow>();
-        UIDeployHero5 = transform.Find("Deploy/DeployList/DeployHero5").GetComponent<HeroDownWindow>();
-        //添加到数组中方便查找
-        UIDeployButtonArr = new HeroDownWindow[5];
-        UIDeployButtonArr[0] = UIDeployHero1;
-        UIDeployButtonArr[1] = UIDeployHero2;
-        UIDeployButtonArr[2] = UIDeployHero3;
-        UIDeployButtonArr[3] = UIDeployHero4;
-        UIDeployButtonArr[4] = UIDeployHero5;
+        UIDeployList= transform.Find("Deploy/DeployList");
 
-        foreach (HeroDownWindow button in UIDeployButtonArr)
+        //预制件初始化
+        HeroUIItemPrefab = Resources.Load<GameObject>("UI/HeroDetail");
+        HeroDeployItem = Resources.Load<GameObject>("UI/DeployHero");
+
+        //初始化上阵栏数组
+        UIDeployButtonArr = new HeroDownWindow[5];
+        //生成五个按钮并加入队列
+        for (int i = 0; i < 5; i++)
         {
-            button.bagController = this.controller;
+            HeroDownWindow heroDownWindow = new HeroDownWindow(HeroDeployItem, UIDeployList, i + 1);
+            heroDownWindow.bagController = controller;
+            UIDeployButtonArr[i] = heroDownWindow;
         }
+
         //页面初始化
         UICodex.gameObject.SetActive(false);
         UIHeroBag.gameObject.SetActive(true);
@@ -126,64 +132,38 @@ public class HeroWholePageWindow : BasePanel
     private void ClickInit()
     {
         //注册按键事件
+        //关闭整个页面
         UICloseButton.GetComponent<Button>().onClick.AddListener(() =>
         {
-            controller.OnClickClose();
-        }); 
-        UIHeroButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickHero();
-        }); 
-        UICodexButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickCodex();
-        }); 
-        UIShowHero.onClick.AddListener(() =>
-        {
-            Attack();
-        }); 
-        UIPlusButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickPlus();
-        }); 
-        UIReferrerButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickReferrer();
-        }); 
-        UIAllButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickAll();
-        }); 
-        UIForceButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickForce();
+            controller.ClosePanel();
         });
-        UIInnerForceButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickInnerForce();
-        }); 
-        UIHealButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickHeal();
-        }); 
-        UISwordButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickSword();
-        }); 
-        UISkillButton.GetComponent<Button>().onClick.AddListener(() =>
-        {
-            controller.OnClickSkill();
-        }); 
+
+        //内部显示逻辑
+        UIHeroButton.GetComponent<Button>().onClick.AddListener(OnClickHero);
+        UICodexButton.GetComponent<Button>().onClick.AddListener(OnClickCodex);
+
+        //内部交互逻辑
+        //动画展示
+        UIShowHero.onClick.AddListener(Attack);
+        //内部界面显示逻辑
+        UIPlusButton.GetComponent<Button>().onClick.AddListener(OnClickPlus);
+        UIReferrerButton.GetComponent<Button>().onClick.AddListener(OnClickReferrer);
+        //内部按键交互逻辑
+        UIAllButton.GetComponent<Button>().onClick.AddListener(OnClickAll);
+        UIForceButton.GetComponent<Button>().onClick.AddListener(OnClickForce);
+        UIInnerForceButton.GetComponent<Button>().onClick.AddListener(OnClickInnerForce);
+        UIHealButton.GetComponent<Button>().onClick.AddListener(OnClickHeal);
+        UISwordButton.GetComponent<Button>().onClick.AddListener(OnClickSword);
+        UISkillButton.GetComponent<Button>().onClick.AddListener(OnClickSkill);
+        //使用model层数据刷新英雄
         UIUPButton.GetComponent<Button>().onClick.AddListener(() =>
         {
             controller.UpdateDeployHero();
-        }); 
+        });
     }
 
-    public void RefreshHeroDetail(HeroLocalItem heroLocalItem)
+    public void RefreshHeroDetail(HeroLocalItem heroLocalItem,Hero hero)
     {
-        //显示英雄信息
-        Hero hero = HeroStaticData.Instance.GetHeroById(heroLocalItem.id);
         //稀有度信息
         UIHeroInfo_GradeText.text = hero.rarity.ToString();
         //攻击力
@@ -233,4 +213,63 @@ public class HeroWholePageWindow : BasePanel
         HeroPrefab.SetStateAnimationIndex(PlayerState.ATTACK);
         HeroPrefab.PlayStateAnimation(PlayerState.ATTACK);
     }
+
+    public void OnClickHero()
+    {
+        UICodex.gameObject.SetActive(false);
+        UIHeroBag.gameObject.SetActive(true);
+    }
+
+    public void OnClickCodex()
+    {
+        UIHeroBag.gameObject.SetActive(false);
+        UICodex.gameObject.SetActive(true);
+    }
+
+    public void OnClickPlus()
+    {
+        Debug.Log("plus capcity");
+    }
+
+    public void OnClickReferrer()
+    {
+        Debug.Log("show referrer");
+    }
+
+    public void OnClickAll()
+    {
+        Debug.Log("filter all");
+        controller.RefreshScrollView(HeroType.All);
+    }
+
+    public void OnClickForce()
+    {
+        Debug.Log("filter force");
+        controller.RefreshScrollView(HeroType.Force);
+    }
+
+    public void OnClickInnerForce()
+    {
+        Debug.Log("filter innerforce");
+        controller.RefreshScrollView(HeroType.InnerForce);
+    }
+
+    public void OnClickHeal()
+    {
+        Debug.Log("filter heal");
+        controller.RefreshScrollView(HeroType.Heal);
+    }
+
+    public void OnClickSword()
+    {
+        Debug.Log("filter sword");
+        controller.RefreshScrollView(HeroType.Sword);
+    }
+
+    public void OnClickSkill()
+    {
+        Debug.Log("filter skill");
+        controller.RefreshScrollView(HeroType.Skill);
+    }
+
 }

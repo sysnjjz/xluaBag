@@ -9,16 +9,16 @@ public class UIManager
     //单例
     private static UIManager instance;
 
-    public Transform uiRoot;
+    private Transform uiRoot;
 
     //路径配置字典
-    private Dictionary<string, string> pathDict;
+    public Dictionary<string, string> pathDict;
     //预制件缓存字典
     public Dictionary<string, GameObject> prefabDict;
     //已打开界面缓存
     public Dictionary<string, BasePanel> panelDict;
     //已打开界面堆栈
-    private Stack<BasePanel> panelStack;
+    public Stack<BasePanel> panelStack;
 
     private UIManager()
     {
@@ -66,49 +66,46 @@ public class UIManager
     }
 
     //打开界面
-    public BasePanel OpenPanel(string name)
+    public void OpenPanel(string name)
     {
-        BasePanel panel = null;
-
         //已经打开的界面不打开
+        BasePanel panel = null;
         if (panelDict.TryGetValue(name, out panel))
         {
-            return null;
+            return;
         }
+
         //找不到界面也不打开
         string path = "";
         if (!pathDict.TryGetValue(name, out path))
         {
-            return null;
+            return;
         }
-
-        //生成界面
-        UIFactory factory = new UIFactory();
-        panel = factory.CreatePanel(name, path);
 
         //设置下层界面不可见
         if (panelStack.Count != 0)
         {
             panelStack.Peek().SetOnShow(false);
         }
-        panelStack.Push(panel);
 
-        return panel;
+        //生成对应控制器
+        UIFactory factory = new UIFactory();
+        factory.CreateController(name);
     }
 
     //关闭界面
     public bool ClosePanel(string name)
     {
-        BasePanel panel = null;
         //没打开的不关
+        BasePanel panel = null;
         if (!panelDict.TryGetValue(name, out panel))
         {
             return false;
         }
 
-        panelStack.Peek().IsRemove = true;
-        panelStack.Peek().SetOnShow(false);
-        UnityEngine.Object.Destroy(panelStack.Pop().gameObject);
+        //关闭对应界面
+        BasePanel nowPanel= panelStack.Pop();
+        nowPanel.ClosePanel();
 
         //设置下层界面可见
         if (panelStack.Count != 0)
@@ -135,71 +132,23 @@ public class UIConst
 
 public class UIFactory
 {
-    public BasePanel CreatePanel(string name,string path)
+    public void CreateController(string name)
     {
         switch (name)
         {
             case UIConst.MainMenu:
-                MainPageView mainpagepanel = new MainPageView();
-
-                GameObject mainpagepanelPrefab = null;
-                if (!UIManager.Instance.prefabDict.TryGetValue(name, out mainpagepanelPrefab))
-                {
-                    mainpagepanel.BeforeInit(name, "Prefab/Panel" + path);
-                }
-                else
-                {
-                    mainpagepanel.gameObject = mainpagepanelPrefab;
-                }
-
-                //打开界面
-                mainpagepanel.Initial(name, UIManager.Instance.UIRoot);
-
-                MainPageController mainPageController = new MainPageController(mainpagepanel);
-
-                return mainpagepanel;
+                MainPageController mainPageController = new MainPageController();
+                break;
 
             case UIConst.HeroBackPack:
-                HeroWholePageWindow bagPanel = new HeroWholePageWindow();
-
-                GameObject bagPanelPrefab = null;
-                if (!UIManager.Instance.prefabDict.TryGetValue(name, out bagPanelPrefab))
-                {
-                    bagPanel.BeforeInit(name, "Prefab/Panel" + path);
-                }
-                else
-                {
-                    bagPanel.gameObject = bagPanelPrefab;
-                }
-
-                //打开界面
-                bagPanel.Initial(name, UIManager.Instance.UIRoot);
-
-                BagController bagController = new BagController(bagPanel);
-
-                return bagPanel;
+                BagController bagController = new BagController();
+                break;
 
             case UIConst.DrawCard:
-                CardView cardPanel = new CardView();
-
-                GameObject cardPanelPrefab = null;
-                if (!UIManager.Instance.prefabDict.TryGetValue(name, out cardPanelPrefab))
-                {
-                    cardPanel.BeforeInit(name, "Prefab/Panel" + path);
-                }
-                else
-                {
-                    cardPanel.gameObject = cardPanelPrefab;
-                }
-
-                //打开界面
-                cardPanel.Initial(name, UIManager.Instance.UIRoot);
-
-                CardController cardController = new CardController(cardPanel);
-
-                return cardPanel;
+                CardController cardController = new CardController();
+                break;
             default:
-                return null;
+                break;
         }
     }
 }
