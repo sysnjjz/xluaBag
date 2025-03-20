@@ -9,7 +9,7 @@ public class HeroCamera : MonoBehaviour
     public float initialHeight = 1080;
     public float initialFov = 60;
     public float initialY = 100;
-    public float initialZ = -400;
+    public float initialZ = -600;
 
     private float NowWidth;
     private float NowHeight;
@@ -19,8 +19,8 @@ public class HeroCamera : MonoBehaviour
         mainCamera = GetComponent<Camera>();
         mainCamera.fieldOfView = initialFov;
         mainCamera.transform.position = new Vector3(0, initialY, initialZ);
-        NowWidth=Screen.width;
-        NowHeight=Screen.height;
+        NowWidth = Screen.width;
+        NowHeight = Screen.height;
     }
 
     private void Update()
@@ -36,6 +36,6 @@ public class HeroCamera : MonoBehaviour
 
     void AdjustCameraForResolution()
     {
-        mainCamera.transform.position = new Vector3(0,initialY * ((float)Screen.height / initialHeight),initialZ * ((float)Screen.width / initialWidth));
+        mainCamera.transform.position = new Vector3(0, initialY * ((float)Screen.height / initialHeight), initialZ * ((float)Screen.width / initialWidth));
     }
 }

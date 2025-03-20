@@ -1,0 +1,6 @@
+local #NAME# = BaseClass("#NAME#")
+-- 初始化函数
+function #NAME#:__init(params)
+end
+
+return #NAME#

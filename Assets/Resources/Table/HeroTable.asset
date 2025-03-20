@@ -9,42 +9,42 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c317b8c7d81d6d940acdfeb7bcc98dd3, type: 3}
+  m_Script: {fileID: 11500000, guid: 6e8ae42811445e94e8f12bd2e8524c7b, type: 3}
   m_Name: HeroTable
   m_EditorClassIdentifier: 
   HeroList:
   - id: 1
     rarity: 1
-    name: Force
+    name: dun
     type: 0
-    keyword: "\u52BF\u4E0D\u53EF\u6321"
-    ImgPath: HeroImage/Hero1
-    PrefabPath: HeroPrefab/Hero1
+    keyword: 1111
+    imgPath: HeroImage/Hero1
+    prefabPath: HeroPrefab/Hero1
   - id: 2
     rarity: 2
-    name: Sword
+    name: jian
     type: 3
-    keyword: "\u4E00\u9A6C\u5F53\u5148"
-    ImgPath: HeroImage/Hero2
-    PrefabPath: HeroPrefab/Hero2
+    keyword: 1111
+    imgPath: HeroImage/Hero2
+    prefabPath: HeroPrefab/Hero2
   - id: 3
     rarity: 3
-    name: Heal
+    name: heal
     type: 2
-    keyword: "\u6CBB\u6108"
-    ImgPath: HeroImage/Hero3
-    PrefabPath: HeroPrefab/Hero3
+    keyword: 1111
+    imgPath: HeroImage/Hero3
+    prefabPath: HeroPrefab/Hero3
   - id: 4
     rarity: 4
-    name: Skill
+    name: fa
     type: 4
-    keyword: "\u4EE5\u4E00\u654C\u767E"
-    ImgPath: HeroImage/Hero4
-    PrefabPath: HeroPrefab/Hero4
+    keyword: 1111
+    imgPath: HeroImage/Hero4
+    prefabPath: HeroPrefab/Hero4
   - id: 5
     rarity: 5
-    name: Evil
+    name: neili
     type: 1
-    keyword: "\u5929\u5916\u6709\u5929"
-    ImgPath: HeroImage/Hero5
-    PrefabPath: HeroPrefab/Hero5
+    keyword: 1111
+    imgPath: HeroImage/Hero5
+    prefabPath: HeroPrefab/Hero5
