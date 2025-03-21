@@ -33,10 +33,10 @@ namespace XLua.CSObjectWrap
 
 		    Utils.BeginClassRegister(type, L, __CreateInstance, 7, 0, 0);
 			Utils.RegisterFunc(L, Utils.CLS_IDX, "ExitApplication", _m_ExitApplication_xlua_st_);
-            Utils.RegisterFunc(L, Utils.CLS_IDX, "SaveLocalItemJson", _m_SaveLocalItemJson_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "LoadLocalItemJson", _m_LoadLocalItemJson_xlua_st_);
-            Utils.RegisterFunc(L, Utils.CLS_IDX, "SaveDeployHeroJson", _m_SaveDeployHeroJson_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "SaveLocalItemJson", _m_SaveLocalItemJson_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "LoadDeployHeroJson", _m_LoadDeployHeroJson_xlua_st_);
+            Utils.RegisterFunc(L, Utils.CLS_IDX, "SaveDeployHeroJson", _m_SaveDeployHeroJson_xlua_st_);
             Utils.RegisterFunc(L, Utils.CLS_IDX, "GetHeroList", _m_GetHeroList_xlua_st_);
             
 			
@@ -101,6 +101,32 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
+        static int _m_LoadLocalItemJson_xlua_st_(RealStatePtr L)
+        {
+		    try {
+            
+                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
+            
+            
+            
+                
+                {
+                    
+                        var gen_ret = LuaBridge.LoadLocalItemJson(  );
+                        translator.Push(L, gen_ret);
+                    
+                    
+                    
+                    return 1;
+                }
+                
+            } catch(System.Exception gen_e) {
+                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
+            }
+            
+        }
+        
+        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
         static int _m_SaveLocalItemJson_xlua_st_(RealStatePtr L)
         {
 		    try {
@@ -127,7 +153,7 @@ namespace XLua.CSObjectWrap
         }
         
         [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_LoadLocalItemJson_xlua_st_(RealStatePtr L)
+        static int _m_LoadDeployHeroJson_xlua_st_(RealStatePtr L)
         {
 		    try {
             
@@ -138,7 +164,7 @@ namespace XLua.CSObjectWrap
                 
                 {
                     
-                        var gen_ret = LuaBridge.LoadLocalItemJson(  );
+                        var gen_ret = LuaBridge.LoadDeployHeroJson(  );
                         translator.Push(L, gen_ret);
                     
                     
@@ -170,32 +196,6 @@ namespace XLua.CSObjectWrap
                     
                     
                     return 0;
-                }
-                
-            } catch(System.Exception gen_e) {
-                return LuaAPI.luaL_error(L, "c# exception:" + gen_e);
-            }
-            
-        }
-        
-        [MonoPInvokeCallbackAttribute(typeof(LuaCSFunction))]
-        static int _m_LoadDeployHeroJson_xlua_st_(RealStatePtr L)
-        {
-		    try {
-            
-                ObjectTranslator translator = ObjectTranslatorPool.Instance.Find(L);
-            
-            
-            
-                
-                {
-                    
-                        var gen_ret = LuaBridge.LoadDeployHeroJson(  );
-                        translator.Push(L, gen_ret);
-                    
-                    
-                    
-                    return 1;
                 }
                 
             } catch(System.Exception gen_e) {

@@ -2,6 +2,7 @@ local BagView=require("Panel.BagPanel.View.BagView")
 local HeroView=require("Panel.BagPanel.View.HeroView")
 local DeployHeroView=require("Panel.BagPanel.View.DeployHeroView")
 local BagModel=require("Panel.BagPanel.Model.BagModel")
+local util=require("util")
 
 local BagController = BaseClass("BagController")
 --单例
@@ -96,14 +97,19 @@ function BagController:InitUI()
         self.bagModel:SetUID(LocalModel:Instance():GetSortedHeroLocalData()[1].uid)
     end
 
-    --初始化上阵英雄列表
-    self:__refreshDeployHero()
-    --初始化显示英雄背包
-    self:__initHero()
-    --初始化当前展示英雄
-    self:__refreshShowHero()
-    --初始化已激活组件字典
-    self:__initialDict()
+    -- 获取 Unity 的 MonoBehaviour 实例
+    local monoInstance = CS.UnityEngine.Object.FindObjectOfType(typeof(CS.UnityEngine.MonoBehaviour))
+    -- 要加载的资源字典
+    self.resourceDic = {
+        ["deploy hero"] = function() self:__refreshDeployHero() end,
+        ["hero bag"] = function() self:__initHero() end,
+        ["show hero"] = function() self:__refreshShowHero() end,
+        ["Dict"] = function() self:__initialDict() end
+    }
+    monoInstance:StartCoroutine(util.cs_generator(self.resourceDic["deploy hero"]))
+    monoInstance:StartCoroutine(util.cs_generator(self.resourceDic["hero bag"]))
+    monoInstance:StartCoroutine(util.cs_generator(self.resourceDic["show hero"]))
+    monoInstance:StartCoroutine(util.cs_generator(self.resourceDic["Dict"]))
 end
 
 --初始化上阵英雄栏
