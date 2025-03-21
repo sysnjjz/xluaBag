@@ -3,7 +3,7 @@
 function BagModel:__init(params)
     --私有属性
     self.chooseUid=0
-    self.chooseBid=1
+    self.chooseBid=0
 
     self.eventListeners={}
 end
@@ -29,7 +29,7 @@ end
 function BagModel:SetUID(newUid)
     if self.chooseUid~=newUid then
         self.chooseUid=newUid
-        self:__triggerEvent("onChangeUid")
+        self:__triggerEvent("onChangeUid")        
     end
 end
 

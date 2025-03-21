@@ -27,6 +27,9 @@ function CardView:__init(basePanel)
 
     --加载资源
     self.cardDetail = Resources.Load("UI/Image");
+
+    --对象池
+    self.cardPool=ObjectPool:New(CardDetailView,10,self.cardDetail,self.cardList)
 end
 
 -- 注册事件监听器
@@ -46,7 +49,7 @@ end
 function CardView:ClearCard()
     --清除原有的卡
     for i=0,self.cardList.childCount-1 do
-        Object.Destroy(self.cardList:GetChild(i).gameObject)
+        self.cardPool:ReturnObject(self.cardList:GetChild(i))
     end
 end
 
@@ -55,7 +58,7 @@ function CardView:ShowOneCard(heroData)
     --销毁原有的
     self:ClearCard()
     --抽张新的
-    local newCard= CardDetailView:New(self.cardDetail,self.cardList)
+    local newCard=self.cardPool:GetObject(self.cardDetail,self.cardList)
     newCard:Refresh(heroData)
 end
 
@@ -63,10 +66,10 @@ end
 function CardView:ShowTenCard(heroList)
     --销毁原有的
     self:ClearCard()
-    --抽张新的--对象池修改范围
+    --抽张新的
     for k,v in ipairs(heroList) do
         --抽张新的
-        local newCard= CardDetailView:New(self.cardDetail,self.cardList)
+        local newCard=self.cardPool:GetObject(self.cardDetail,self.cardList)
         newCard:Refresh(v)
     end
 

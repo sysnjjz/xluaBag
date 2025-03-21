@@ -178,12 +178,38 @@ function BagView:RefreashHeroDetail(localData,heroData)
     RefreshStars(self.star,heroData)
 end
 
+-- 恢复初始视图
+function BagView:ClearHeroDetail()
+    --稀有度信息
+    self.uiHeroInfo_GradeText.text=""
+    --攻击力
+    self.uiATKText.text=""
+    --名称
+    self.uiHeroInfo_NameText.text=""
+    --关键词
+    self.uiHeroInfo_KeyWordText.text=""
+
+    --清除原有的预制体
+    for i=0,self.uiHero.childCount-1 do
+        Object.Destroy(self.uiHero:GetChild(i).gameObject)
+    end
+
+    --清除星星
+    for i=0,self.star.childCount-1 do
+        self.star:GetChild(i).gameObject:SetActive(false)
+    end
+end
+
 --改变发光按钮
 function BagView:ChangeLightingButton(oldBid,newBid)
-    --前一个按钮不亮
-    self.uiDeployBtnArr[oldBid]:SetIsLighting(false)
-    --后一个亮
-    self.uiDeployBtnArr[newBid]:SetIsLighting(true)
+    if oldBid~=0 then 
+        --前一个按钮不亮
+        self.uiDeployBtnArr[oldBid]:SetIsLighting(false)
+    end
+    if newBid~=0 then 
+        --后一个亮
+        self.uiDeployBtnArr[newBid]:SetIsLighting(true)
+    end
 end
 
 return BagView

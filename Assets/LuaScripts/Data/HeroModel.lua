@@ -38,6 +38,10 @@ end
 
 --得到指定英雄设定数据
 function HeroModel:GetHeroByID(id)
+    if Lens(self.heroList)==0 then
+        print("no hero data")
+        return nil
+    end
     for k,v in ipairs(self.heroList) do
         if v.id==id then
             return v

@@ -1,15 +1,16 @@
 ﻿local HeroView = BaseClass("HeroView")
 
 -- 初始化函数
-function HeroView:__init(panel,uid)
+function HeroView:__init(resource,root)
     --基本属性
-    self.controlPanel=panel
-    self.transform=panel.transform
+    self.controlPanel=GameObject.Instantiate(resource,root,false)
+    self.transform=self.controlPanel.transform
     self.eventListeners={}
 
     --存储的对象uid
-    self.uid=uid
-
+    self.uid=0
+    --是否已激活
+    self.isActice=false
     --UI组件
     self.grade = self.transform:Find("Grade"):GetComponent("Text")
     self.type = self.transform:Find("Type").gameObject:GetComponent("Image")
@@ -19,6 +20,7 @@ function HeroView:__init(panel,uid)
     --按键事件
     self.btn.onClick:AddListener(function()
         self:__triggerEvent("changeUid",self.uid)
+        self:__triggerEvent("changeBid",0)
     end)
 end
 
@@ -36,7 +38,8 @@ function HeroView:__triggerEvent(event, data)
 end
 
 --更新预制体信息
-function HeroView:Refresh(heroData)
+function HeroView:Refresh(uid,heroData)
+    self.uid=uid
     --稀有度信息
     self.grade.text = GetName(typeof(HeroGrade),heroData.rarity)
     --显示人物图片

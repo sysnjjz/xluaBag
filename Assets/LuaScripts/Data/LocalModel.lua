@@ -55,7 +55,10 @@ end
 --根据uid拿到指定动态数据
 function LocalModel:GetLocalItemDataByUid(uid)
     --表中无数据 返回
-    if Lens(self.localDataList)==0 then return nil end
+    if Lens(self.localDataList)==0 then  
+        print("no local data")
+        return nil 
+    end
     --遍历查找
     for k,v in ipairs(self.localDataList) do
         if v.uid==uid then

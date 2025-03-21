@@ -6,6 +6,8 @@ function CardDetailView:__init(resource,root)
     self.transform=self.controlPanel.transform
     self.transform.localScale=Vector3(0.8,0.8,0.8)
 
+    --是否激活
+    self.isActive=false
     --获取组件
     self.star = self.transform:Find("Star");
     self.type = self.transform:Find("Type"):GetComponent("Image");

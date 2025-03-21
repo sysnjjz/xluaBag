@@ -55,4 +55,13 @@ function DeployHeroView:Refresh(localData,heroData)
     self.ATK.text=tostring(localData.ATK)
 end
 
+--恢复默认设置
+function DeployHeroView:RefreshNull()
+    --不显示图像
+    local newColor=self.image.color
+    newColor.a=0
+    self.image.color=newColor
+    self.ATK.text=""
+end
+
 return DeployHeroView
