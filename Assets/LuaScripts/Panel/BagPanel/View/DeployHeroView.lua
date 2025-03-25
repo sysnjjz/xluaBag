@@ -59,6 +59,7 @@ end
 function DeployHeroView:__heroCallBack(res)
     self.image.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
 end
+
 --恢复默认设置
 function DeployHeroView:RefreshNull()
     --不显示图像

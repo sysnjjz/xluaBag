@@ -25,6 +25,10 @@ function BagController:__init(name)
         CS.AsyncMgr.Instance:LoadAsync("DeployHero", function(res)
             return self:__deployHeroCallBack(res)
         end)
+        --英雄类型子控件
+        CS.AsyncMgr.Instance:LoadAsync("TypeBtn", function(res)
+            return self:__createHeroTypeBtn(res)
+        end)
 
         self:__initID()
         self:__refreshShowHero()
@@ -40,20 +44,6 @@ function BagController:__heroCallBack(res)
     --对象池
     self.heroPool=ObjectPool:New(HeroView,12,self.heroUIItemPrefab,self.view.uiHeroContent.content)
     self:__refreshHero(HeroType.All)
-end
-
---上阵英雄子控件
-function BagController:__deployHeroCallBack(res)
-    self.heroDeployItem=res
-    --生成上阵英雄按钮添加到页面里
-    for i=1,5 do
-        local deployHeroView=DeployHeroView:New(GameObject.Instantiate(self.heroDeployItem,self.view.uiDeployList),i)
-        deployHeroView:AddEventListener("changeBid",function(newButtonID)
-            self:__changeBid(newButtonID)
-        end)
-        self.view:AddDeployHero(deployHeroView)
-    end
-    self:__refreshDeployHero()
 end
 
 --控制UI
@@ -94,6 +84,42 @@ function BagController:__createHeroWindow(uid,heroData)
         self:__changeBid(newBID)
     end)
     heroCell:Refresh(uid,heroData)
+end
+
+--生成子控件：上阵英雄子控件
+function BagController:__deployHeroCallBack(res)
+    self.heroDeployItem=res
+    --生成上阵英雄按钮添加到页面里
+    for i=1,5 do
+        local deployHeroView=DeployHeroView:New(GameObject.Instantiate(self.heroDeployItem,self.view.uiDeployList),i)
+        deployHeroView:AddEventListener("changeBid",function(newButtonID)
+            self:__changeBid(newButtonID)
+        end)
+        self.view:AddDeployHero(deployHeroView)
+    end
+    self:__refreshDeployHero()
+end
+
+--生成子控件：英雄分类视图
+function BagController:__createHeroTypeBtn(res)
+    self.btn=res
+    --示例配置表
+    local config=
+    {
+        ["All"]={heroType=HeroType.All,icon="All"},
+        ["Force"]={heroType=HeroType.Force,icon="Force"},
+        ["InnerForce"]={heroType=HeroType.InnerForce,icon="InnerForce"},
+        ["Skill"]={heroType=HeroType.Skill,icon="Skill"},
+        ["Sword"]={heroType=HeroType.Sword,icon="Sword"},
+        ["Heal"]={heroType=HeroType.Heal,icon="Heal"}
+    }
+    --生成上阵英雄按钮添加到页面里
+    for k,v in pairs(config) do
+        local newBtn=btnView:New(GameObject.Instantiate(self.btn,self.view.uiBtnList),v.heroType,v.icon)
+        newBtn:AddEventListener("changeShowHero",function(heroType)
+            self:__refreshHero(heroType)
+        end)
+    end
 end
 -----------------------------------------------初始化设置结束-------------------------------------------------
 

@@ -15,9 +15,11 @@ require("Panel.CardPanel.View.CardView")
 require("Panel.CardPanel.Model.CardModel")
 require("Panel.CardPanel.Controller.CardController")
 
+require("Panel.BagPanel.View.btnView")
 require("Panel.BagPanel.View.HeroView")
 require("Panel.BagPanel.View.DeployHeroView")
 require("Panel.BagPanel.View.BagView")
+
 require("Panel.BagPanel.Model.BagModel")
 require("Panel.BagPanel.Controller.BagController")
 

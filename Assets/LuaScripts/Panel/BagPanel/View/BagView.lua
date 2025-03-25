@@ -42,12 +42,7 @@ function BagView:__initUI()
     --中间 英雄背包界面
     self.uiHeroContent=self.transform:Find("HeroBag/HeroContent"):GetComponent("ScrollRect")
     --下栏
-    self.uiAllBtn=self.transform:Find("HeroBag/DownWindow/All"):GetComponent("Button")
-    self.uiForceBtn=self.transform:Find("HeroBag/DownWindow/Force"):GetComponent("Button")
-    self.uiInnerForceBtn=self.transform:Find("HeroBag/DownWindow/InnerForce"):GetComponent("Button")
-    self.uiHealBtn=self.transform:Find("HeroBag/DownWindow/Heal"):GetComponent("Button")
-    self.uiSwordBtn=self.transform:Find("HeroBag/DownWindow/Sword"):GetComponent("Button")
-    self.uiSkillBtn=self.transform:Find("HeroBag/DownWindow/Skill"):GetComponent("Button")
+    self.uiBtnList=self.transform:Find("HeroBag/DownWindow")
 
     --右上侧英雄展示页面
     self.uiShowHeroBtn= self.transform:Find("ShowHero"):GetComponent("Button")
@@ -75,26 +70,6 @@ function BagView:__initButton()
     --关闭界面
     self.uiCloseBtn.onClick:AddListener(function()
         self:__triggerEvent("closePanel")
-    end)
-
-    --调用数据做更新
-    self.uiAllBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.All)
-    end)
-    self.uiForceBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.Force)
-    end)
-    self.uiInnerForceBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.InnerForce)
-    end)
-    self.uiHealBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.Heal)
-    end)
-    self.uiSwordBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.Sword)
-    end)
-    self.uiSkillBtn.onClick:AddListener(function()
-        self:__triggerEvent("changeShowHero",HeroType.Skill)
     end)
 
     --更新上阵英雄
