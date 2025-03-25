@@ -1,9 +1,9 @@
-﻿local HeroView = BaseClass("HeroView")
+﻿HeroView = BaseClass("HeroView")
 
 -- 初始化函数
-function HeroView:__init(resource,root)
+function HeroView:__init(resource,uiRoot)
     --基本属性
-    self.controlPanel=GameObject.Instantiate(resource,root,false)
+    self.controlPanel=GameObject.Instantiate(resource,uiRoot)
     self.transform=self.controlPanel.transform
     self.eventListeners={}
 
@@ -42,15 +42,23 @@ function HeroView:Refresh(uid,heroData)
     self.uid=uid
     --稀有度信息
     self.grade.text = GetName(typeof(HeroGrade),heroData.rarity)
-    --显示人物图片
-    local pic1=Resources.Load(tostring(heroData.imgPath),typeof(Texture2D))
-    self.image.sprite= Sprite.Create(pic1, Rect(0, 0, pic1.width, pic1.height), Vector2(0, 0))
+
     --显示类别图片
     local path=GetName(typeof(HeroType),heroData.type)
-    local pic2 = Resources.Load("Icon/"..tostring(path),typeof(Texture2D))
-    self.type.sprite = Sprite.Create(pic2, Rect(0, 0, pic2.width, pic2.height), Vector2(0, 0))
+    CS.AsyncMgr.Instance:LoadAsync(tostring(path),function(res)    
+        return self:__typeCallBack(res)
+    end)
+    --显示人物图片
+    CS.AsyncMgr.Instance:LoadAsync(tostring(heroData.imgPath),function(res)    
+        return self:__heroCallBack(res)
+    end)
     --显示星级
     RefreshStars(self.star,heroData);
 end
+function HeroView:__typeCallBack(res)
+    self.type.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end
 
-return HeroView
+function HeroView:__heroCallBack(res)
+    self.image.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end

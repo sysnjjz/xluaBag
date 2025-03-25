@@ -6,7 +6,7 @@ function ObjectPool:__init(class,size,...)
     --对象池尺寸
     self.size=size
     -- 活跃对象列表
-    self.activeObjList = {}
+    self.activeObjList={}
     -- 不活跃对象列表
     self.inactiveObjList = {}
 
@@ -24,30 +24,29 @@ function ObjectPool:GetObject(...)
     if Lens(self.inactiveObjList)> 0 then
         -- 如果有非活跃对象，直接从非活跃列表中取出
         local obj = table.remove(self.inactiveObjList, 1)
-        table.insert(self.activeObjList, obj)
         obj.controlPanel:SetActive(true)
         obj.isActive=true
+        table.insert(self.activeObjList, obj)
         return obj
     else
         -- 如果没有非活跃对象，创建一个新的对象
         local obj = self.class:New(...)
-        table.insert(self.activeObjList, obj)
         obj.controlPanel:SetActive(true)
         obj.isActive=true
+        table.insert(self.activeObjList, obj)
         return obj
     end
 end
 
 -- 将对象放回对象池
-function ObjectPool:ReturnObject(obj)
-    for i, v in ipairs(self.activeObjList) do
-        if v.transform == obj then     
-            v.controlPanel:SetActive(false)   
-            v.isActive=false
-            table.insert(self.inactiveObjList, v)
-            table.remove(self.activeObjList, i)
-            break
-        end
+function ObjectPool:ReturnObject(times)
+    local time=times
+    if times>Lens(self.activeObjList) then time=Lens(self.activeObjList) end
+    for i=1,time do
+        local obj = table.remove(self.activeObjList, 1)
+        obj.controlPanel:SetActive(false)   
+        obj.isActive=false
+        table.insert(self.inactiveObjList, obj)
     end
 end
 

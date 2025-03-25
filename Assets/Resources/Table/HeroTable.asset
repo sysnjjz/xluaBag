@@ -18,33 +18,33 @@ MonoBehaviour:
     name: dun
     type: 0
     keyword: 1111
-    imgPath: HeroImage/Hero1
-    prefabPath: HeroPrefab/Hero1
+    imgPath: HeroImage1
+    prefabPath: HeroPrefab1
   - id: 2
     rarity: 2
     name: jian
     type: 3
     keyword: 1111
-    imgPath: HeroImage/Hero2
-    prefabPath: HeroPrefab/Hero2
+    imgPath: HeroImage2
+    prefabPath: HeroPrefab2
   - id: 3
     rarity: 3
     name: heal
     type: 2
     keyword: 1111
-    imgPath: HeroImage/Hero3
-    prefabPath: HeroPrefab/Hero3
+    imgPath: HeroImage3
+    prefabPath: HeroPrefab3
   - id: 4
     rarity: 4
     name: fa
     type: 4
     keyword: 1111
-    imgPath: HeroImage/Hero4
-    prefabPath: HeroPrefab/Hero4
+    imgPath: HeroImage4
+    prefabPath: HeroPrefab4
   - id: 5
     rarity: 5
     name: neili
     type: 1
     keyword: 1111
-    imgPath: HeroImage/Hero5
-    prefabPath: HeroPrefab/Hero5
+    imgPath: HeroImage5
+    prefabPath: HeroPrefab5

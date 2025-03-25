@@ -22,6 +22,9 @@ namespace XLua.CSObjectWrap
         static void wrapInit0(LuaEnv luaenv, ObjectTranslator translator)
         {
         
+            translator.DelayWrapLoader(typeof(AsyncMgr), AsyncMgrWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(LuaBridge), LuaBridgeWrap.__Register);
         
         

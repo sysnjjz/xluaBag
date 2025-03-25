@@ -1,4 +1,4 @@
-﻿local DeployHeroView = BaseClass("DeployHeroView")
+﻿DeployHeroView = BaseClass("DeployHeroView")
 -- 初始化函数
 function DeployHeroView:__init(panel,buttonId)
     --基本属性
@@ -46,15 +46,19 @@ end
 --刷新显示对象
 function DeployHeroView:Refresh(localData,heroData)
     --刷新显示图像
-    local pic=Resources.Load(tostring(heroData.imgPath),typeof(Texture2D))
-    self.image.sprite=Sprite.Create(pic,Rect(0, 0, pic.width, pic.height), Vector2(0, 0))
+    CS.AsyncMgr.Instance:LoadAsync(tostring(heroData.imgPath),function(res)    
+        return self:__heroCallBack(res)
+    end)
     --发光
     local newColor=self.image.color
     newColor.a=1
     self.image.color=newColor
     self.ATK.text=tostring(localData.ATK)
 end
-
+--回调
+function DeployHeroView:__heroCallBack(res)
+    self.image.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end
 --恢复默认设置
 function DeployHeroView:RefreshNull()
     --不显示图像
@@ -63,5 +67,3 @@ function DeployHeroView:RefreshNull()
     self.image.color=newColor
     self.ATK.text=""
 end
-
-return DeployHeroView

@@ -1,4 +1,4 @@
-﻿local CardDetailView = BaseClass("CardDetailView")
+﻿CardDetailView = BaseClass("CardDetailView")
 -- 初始化函数
 function CardDetailView:__init(resource,root)
     --基本属性
@@ -19,15 +19,22 @@ end
 function CardDetailView:Refresh(heroData)
     --类别图片
     local path=GetName(typeof(HeroType),heroData.type)
-    local pic=Resources.Load("Icon/"..tostring(path),typeof(Texture2D))
-    self.type.sprite= Sprite.Create(pic, Rect(0, 0, pic.width, pic.height), Vector2(0, 0))
-    --英雄图片
-    local pic1=Resources.Load(tostring(heroData.imgPath),typeof(Texture2D))
-    self.image.sprite= Sprite.Create(pic1, Rect(0, 0, pic1.width, pic1.height), Vector2(0, 0))
+    CS.AsyncMgr.Instance:LoadAsync(tostring(path),function(res)    
+        return self:__typeCallBack(res)
+    end)
+    CS.AsyncMgr.Instance:LoadAsync(tostring(heroData.imgPath),function(res)    
+        return self:__heroCallBack(res)
+    end)
     --显示姓名
     self.name.text=heroData.name
     --更新星星
     RefreshStars(self.star,heroData)
 end
 
-return CardDetailView
+function CardDetailView:__typeCallBack(res)
+    self.type.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end
+
+function CardDetailView:__heroCallBack(res)
+    self.image.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end

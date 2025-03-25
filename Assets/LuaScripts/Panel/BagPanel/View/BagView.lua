@@ -1,11 +1,29 @@
-﻿local BagView = BaseClass("BagView",BasePanel)
+﻿BagView = BaseClass("BagView",BasePanel)
 -- 初始化函数
-function BagView:__init(basePanel)
+function BagView:__init(name)
     --基本属性
-    self.controlPanel=basePanel.controlPanel
-    self.transform=basePanel.transform
     self.eventListeners={}
+    self.OnViewLoaded = nil
+    self:Load(name,UIManager:Instance().uiRoot) 
+end
 
+function BagView:__callBack(res)
+    self.controlPanel=GameObject.Instantiate(res,self.uiRoot)
+    self.transform=self.controlPanel.transform
+    self.controlPanel:SetActive(true)
+
+    self:__initUI()
+    self:__initButton()
+
+    self.isDoneLoading=true
+    if self.OnViewLoaded then
+        self.OnViewLoaded()
+    end
+end
+
+
+-- ui初始化
+function BagView:__initUI()
     --控件
     --最左侧按键界面
     --UI控件 侧边栏按钮和关闭按钮
@@ -50,7 +68,9 @@ function BagView:__init(basePanel)
     --页面初始化
     self.uiCodex.gameObject:SetActive(false)
     self.uiHeroBag.gameObject:SetActive(true)
+end
 
+function BagView:__initButton()
     --注册按键事件 需要controller做的
     --关闭界面
     self.uiCloseBtn.onClick:AddListener(function()
@@ -168,14 +188,19 @@ function BagView:RefreashHeroDetail(localData,heroData)
         Object.Destroy(self.uiHero:GetChild(i).gameObject)
     end
     --添加新的预制体
-    local nowPrefab=Resources.Load(heroData.prefabPath)
-    local showHero=GameObject.Instantiate(nowPrefab,self.uiHero)
-    showHero.transform.position=Vector3(0,0,0)
-    showHero.transform:Rotate(0, 180, 0)
-    showHero.transform.localScale=Vector3(900,500,450)
+    CS.AsyncMgr.Instance:LoadAsync(tostring(heroData.prefabPath),function(res)    
+        return self:__heroPrefabCallBack(res)
+    end)
 
     --显示星级
     RefreshStars(self.star,heroData)
+end
+--回调
+function BagView:__heroPrefabCallBack(res)
+    local showHero=GameObject.Instantiate(res,self.uiHero)
+    showHero.transform.position=Vector3(0,0,0)
+    showHero.transform:Rotate(0, 180, 0)
+    showHero.transform.localScale=Vector3(900,500,450)
 end
 
 -- 恢复初始视图
@@ -211,5 +236,3 @@ function BagView:ChangeLightingButton(oldBid,newBid)
         self.uiDeployBtnArr[newBid]:SetIsLighting(true)
     end
 end
-
-return BagView

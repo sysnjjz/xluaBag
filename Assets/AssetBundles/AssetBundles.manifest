@@ -1,0 +1,7 @@
+ManifestFileVersion: 0
+CRC: 2244361759
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: my_assest
+      Dependencies: {}

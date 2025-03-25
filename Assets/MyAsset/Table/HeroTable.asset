@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6e8ae42811445e94e8f12bd2e8524c7b, type: 3}
+  m_Name: HeroTable
+  m_EditorClassIdentifier: 
+  HeroList:
+  - id: 1
+    rarity: 1
+    name: dun
+    type: 0
+    keyword: 1111
+    imgPath: HeroImage/Hero1
+    prefabPath: HeroPrefab/Hero1
+  - id: 2
+    rarity: 2
+    name: jian
+    type: 3
+    keyword: 1111
+    imgPath: HeroImage/Hero2
+    prefabPath: HeroPrefab/Hero2
+  - id: 3
+    rarity: 3
+    name: heal
+    type: 2
+    keyword: 1111
+    imgPath: HeroImage/Hero3
+    prefabPath: HeroPrefab/Hero3
+  - id: 4
+    rarity: 4
+    name: fa
+    type: 4
+    keyword: 1111
+    imgPath: HeroImage/Hero4
+    prefabPath: HeroPrefab/Hero4
+  - id: 5
+    rarity: 5
+    name: neili
+    type: 1
+    keyword: 1111
+    imgPath: HeroImage/Hero5
+    prefabPath: HeroPrefab/Hero5

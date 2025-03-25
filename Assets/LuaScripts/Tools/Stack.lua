@@ -1,4 +1,4 @@
-﻿local Stack = BaseClass("Stack")
+﻿Stack = BaseClass("Stack")
  
 function Stack:Create()
     local t = {}
@@ -45,5 +45,3 @@ end
 function Stack:Count()
     return #self.dataTb
 end
- 
-return Stack

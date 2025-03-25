@@ -1,7 +1,8 @@
-﻿local CardModel = BaseClass("CardModel")
+﻿CardModel = BaseClass("CardModel")
 
 -- 初始化函数
-function CardModel:__init(params)
+function CardModel:__init(ctrl)
+    self.ctrl=ctrl
 end
 
 --抽一次
@@ -37,5 +38,3 @@ function CardModel:TenCard()
     end
     return newHeroLocalData
 end
-
-return CardModel

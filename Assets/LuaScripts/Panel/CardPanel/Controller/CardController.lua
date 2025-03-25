@@ -1,26 +1,25 @@
-﻿local CardView=require("Panel.CardPanel.View.CardView")
-local CardModel=require("Panel.CardPanel.Model.CardModel")
-
-local CardController = BaseClass("CardController")
+﻿CardController = BaseClass("CardController")
 --单例
-function CardController:Instance(basePanel)  
+function CardController:Instance()  
     if self.instance == nil then  
-        self.instance = self:New(basePanel)  
+        self.instance = self:New()  
     end  
     return self.instance  
 end 
 
 -- 初始化函数
-function CardController:__init(basePanel)
+function CardController:__init(name)
     --初始化view和module
-    self.view=CardView:New(basePanel)
-    self.model=CardModel:New()
+    self.view=CardView:New(name)
+    self.model=CardModel:New(self)
+
     --监听器
     self:__setupEventListeners()
 end
 
 --页面刷新逻辑
-function CardController:InitUI()
+function CardController:RefreshUI()
+    if self.view.isDoneLoading == nil or false then return end
     self.view:ClearCard()
 end
 
@@ -39,7 +38,7 @@ end
 
 --关闭界面
 function CardController:__closePanel()
-    UIManager:Instance():CloseUI(self.view.controlPanel.name)
+    UIManager:Instance():CloseUI(self.name)
 end
 
 --抽一张卡
@@ -52,4 +51,12 @@ function CardController:__tenCard()
     self.view:ShowTenCard(self.model:TenCard())
 end
 
-return CardController
+--控制UI
+function CardController:ShowView()
+    self.view:OpenPanel()
+end
+
+--控制UI
+function CardController:CloseView()
+    self.view:ClosePanel()
+end

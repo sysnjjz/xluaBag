@@ -106,6 +106,14 @@ function Lens(Itable)
     return count
 end
 
+--清除表的内容
+function ClearTable(Itable)
+    if Itable==nil or Lens(Itable)==0  then return end
+    for i=Lens(Itable),1,-1 do
+        table.remove(Itable,i)
+      end
+end
+
 function RefreshStars(star,heroData)
     for i=0,star.childCount-1 do
         local uiStar=star:GetChild(i)

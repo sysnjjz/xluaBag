@@ -8,6 +8,8 @@ function LocalModel:__init(params)
     self.localDataList={}
     --上阵英雄字典
     self.deployHeroDic={}
+    --临时表
+    self.tmpTypeList={}
 end
 
 --单例
@@ -94,6 +96,24 @@ function LocalModel:GetSortedHeroLocalData()
     end)
 
     return self.localDataList
+end
+
+--获得指定类型的数据
+function LocalModel:GetTypeHeroLocalData(heroType)
+    --表中无数据 返回
+    if Lens(self.localDataList)==0 then
+        print("list is empty")
+        return nil 
+    end
+    --清空表
+    ClearTable(self.tmpTypeList)
+    --查找对应数据并传递出去
+    for k,v in ipairs(self.localDataList) do
+        if HeroModel:Instance():GetHeroByID(v.id).type==heroType then
+            table.insert(self.tmpTypeList,v)
+        end
+    end
+    return self.tmpTypeList
 end
 
 --加载玩家已有英雄

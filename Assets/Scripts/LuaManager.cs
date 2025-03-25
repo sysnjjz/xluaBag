@@ -71,6 +71,10 @@ public class LuaManager : MonoBehaviour
         return ret;
     }
 
+    private void Awake()
+    {
+        AsyncMgr.Instance.ab = AssetBundle.LoadFromFile("Assets/AssetBundles/my_assest");
+    }
     private void Update()
     {
         //¶¨Ê±GC

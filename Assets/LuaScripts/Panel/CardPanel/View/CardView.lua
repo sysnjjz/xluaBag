@@ -1,12 +1,45 @@
-﻿local CardDetailView=require("Panel.CardPanel.View.CardDetailView")
-
-local CardView = BaseClass("CardView")
+﻿CardView = BaseClass("CardView",BasePanel)
 -- 初始化函数
-function CardView:__init(basePanel)
+function CardView:__init(name)
     --基本属性
-    self.controlPanel=basePanel.controlPanel
-    self.transform=basePanel.transform
     self.eventListeners={}
+
+    self:Load(name,UIManager:Instance().uiRoot)
+    
+end
+
+--重载加载函数
+function CardView:AsyncLoad(name)
+    coroutine.wrap(function()
+        -- 异步加载界面
+        self:__waitResource(name,function(res)    
+            return self:__callBack(res)
+        end)
+
+        -- 异步加载资源
+        self:__waitResource("Image",function(res)    
+            return self:__loadCallBack(res)
+        end)
+    end)()
+end
+
+function CardView:__waitResource(name,callBack)
+    local co = coroutine.running() -- 获取当前协程
+
+    -- 启动异步加载
+    CS.AsyncMgr.Instance:LoadAsync(name, function(res)
+        callBack(res)
+        coroutine.resume(co) -- 恢复协程执行
+    end)
+
+    -- 暂停协程，直到异步加载完成
+    return coroutine.yield()
+end
+
+function CardView:__callBack(res)
+    self.controlPanel=GameObject.Instantiate(res,self.uiRoot)
+    self.transform=self.controlPanel.transform
+    self.controlPanel:SetActive(true)
 
     --获取组件
     self.closeBtn = self.transform:Find("Panel/CloseButton"):GetComponent("Button")
@@ -25,9 +58,14 @@ function CardView:__init(basePanel)
         self:__triggerEvent("tenCard")
     end)
 
-    --加载资源
-    self.cardDetail = Resources.Load("UI/Image");
+    self.isDoneLoading=true
+    if self.OnViewLoaded then
+        self.OnViewLoaded()
+    end
+end
 
+function CardView:__loadCallBack(res)
+    self.cardDetail = res
     --对象池
     self.cardPool=ObjectPool:New(CardDetailView,10,self.cardDetail,self.cardList)
 end
@@ -49,7 +87,7 @@ end
 function CardView:ClearCard()
     --清除原有的卡
     for i=0,self.cardList.childCount-1 do
-        self.cardPool:ReturnObject(self.cardList:GetChild(i))
+        self.cardPool:ReturnObject(self.cardList.childCount)
     end
 end
 
@@ -74,5 +112,3 @@ function CardView:ShowTenCard(heroList)
     end
 
 end
-
-return CardView
