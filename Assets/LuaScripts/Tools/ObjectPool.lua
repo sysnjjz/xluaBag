@@ -33,7 +33,7 @@ function ObjectPool:GetObject(...)
         local obj = self.class:New(...)
         obj.controlPanel:SetActive(true)
         obj.isActive=true
-        table.insert(self.activeObjList, obj)
+        table.insert(self.activeObjList,obj)
         return obj
     end
 end
@@ -43,10 +43,10 @@ function ObjectPool:ReturnObject(times)
     local time=times
     if times>TableUtil.Lens(self.activeObjList) then time=TableUtil.Lens(self.activeObjList) end
     for i=1,time do
-        local obj = table.remove(self.activeObjList, 1)
+        local obj = table.remove(self.activeObjList, TableUtil.Lens(self.activeObjList))
         obj.controlPanel:SetActive(false)   
         obj.isActive=false
-        table.insert(self.inactiveObjList, obj)
+        table.insert(self.inactiveObjList, 1,obj)
     end
 end
 
