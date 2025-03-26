@@ -21,7 +21,7 @@ end
 
 -- 从对象池中获取一个对象
 function ObjectPool:GetObject(...)
-    if Lens(self.inactiveObjList)> 0 then
+    if TableUtil.Lens(self.inactiveObjList)> 0 then
         -- 如果有非活跃对象，直接从非活跃列表中取出
         local obj = table.remove(self.inactiveObjList, 1)
         obj.controlPanel:SetActive(true)
@@ -41,7 +41,7 @@ end
 -- 将对象放回对象池
 function ObjectPool:ReturnObject(times)
     local time=times
-    if times>Lens(self.activeObjList) then time=Lens(self.activeObjList) end
+    if times>TableUtil.Lens(self.activeObjList) then time=TableUtil.Lens(self.activeObjList) end
     for i=1,time do
         local obj = table.remove(self.activeObjList, 1)
         obj.controlPanel:SetActive(false)   
@@ -52,6 +52,6 @@ end
 
 -- 清空对象池
 function ObjectPool:Clear()
-    self.activeObjList = {}
-    self.inactiveObjList = {}
+    TableUtil.ClearTable(self.activeObjList)
+    TableUtil.ClearTable(self.inactiveObjList)
 end

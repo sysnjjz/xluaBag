@@ -24,7 +24,7 @@ end
 --预加载逻辑
 function LocalModel:PreLoadHeroData()
     --已经有数据了不用重复读取
-    if Lens(self.localDataList)~=0 then return self.localDataList end
+    if TableUtil.Lens(self.localDataList)~=0 then return self.localDataList end
     --调用C#中的函数读取数据
     local heroLocalData=LuaBridge.LoadLocalItemJson()
     --没读到数据返回
@@ -50,14 +50,14 @@ end
 
 --清除所有英雄
 function LocalModel:ClearOwnHero()
-    self.localDataList={}
+    TableUtil.ClearTable(self.localDataList)
     self:SaveHeroData()
 end
 
 --根据uid拿到指定动态数据
 function LocalModel:GetLocalItemDataByUid(uid)
     --表中无数据 返回
-    if Lens(self.localDataList)==0 then  
+    if TableUtil.Lens(self.localDataList)==0 then  
         print("no local data")
         return nil 
     end
@@ -73,7 +73,7 @@ end
 --获得排好序的数据
 function LocalModel:GetSortedHeroLocalData()
     --表中无数据 返回
-    if Lens(self.localDataList)==0 then
+    if TableUtil.Lens(self.localDataList)==0 then
         print("list is empty")
         return nil 
     end
@@ -101,12 +101,12 @@ end
 --获得指定类型的数据
 function LocalModel:GetTypeHeroLocalData(heroType)
     --表中无数据 返回
-    if Lens(self.localDataList)==0 then
+    if TableUtil.Lens(self.localDataList)==0 then
         print("list is empty")
         return nil 
     end
     --清空表
-    ClearTable(self.tmpTypeList)
+    TableUtil.ClearTable(self.tmpTypeList)
     --查找对应数据并传递出去
     for k,v in ipairs(self.localDataList) do
         if HeroModel:Instance():GetHeroByID(v.id).type==heroType then
@@ -120,11 +120,11 @@ end
 --预加载逻辑
 function LocalModel:PreLoadDeployHeroData()
     --已经有数据了不用重复读取
-    if Lens(self.deployHeroDic)~=0 then return self.deployHeroDic end
+    if TableUtil.Lens(self.deployHeroDic)~=0 then return self.deployHeroDic end
     --调用C#中的函数读取数据
     local deployHeroData=LuaBridge.LoadDeployHeroJson()
     --没读到数据返回
-    if Lens(deployHeroData)==0 then 
+    if TableUtil.Lens(deployHeroData)==0 then 
         print("no deploy data")
         return
     end

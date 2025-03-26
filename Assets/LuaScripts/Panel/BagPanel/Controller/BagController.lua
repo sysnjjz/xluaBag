@@ -125,10 +125,10 @@ end
 --初始化选中id
 function BagController:__initID()
     --设置当前选择展示的英雄的uid 默认展示第一位已上阵英雄 没有第一位已上阵英雄就展示用户背包中权重最高的英雄
-    if ContainKeys(LocalModel:Instance():LoadDeployHeroData(),1) and LocalModel:Instance():LoadDeployHeroData()[1]~=nil then
+    if TableUtil.ContainKeys(LocalModel:Instance():LoadDeployHeroData(),1) and LocalModel:Instance():LoadDeployHeroData()[1]~=nil then
         self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[1].uid)
         self.bagModel:SetBID(1)
-    elseif Lens(LocalModel:Instance():GetSortedHeroLocalData()) ~= 0 then
+    elseif TableUtil.Lens(LocalModel:Instance():GetSortedHeroLocalData()) ~= 0 then
         self.bagModel:SetUID(LocalModel:Instance():GetSortedHeroLocalData()[1].uid)
     end
 end
@@ -148,10 +148,10 @@ end
 function BagController:__refreshDeployHero()
     --上阵英雄不为空
     local dic=LocalModel:Instance():LoadDeployHeroData()
-    if Lens(dic)~=0 then
+    if TableUtil.Lens(dic)~=0 then
         for i=1,5 do
             --如果该位置上有上阵英雄 刷新视图
-            if ContainKeys(dic,i) then
+            if TableUtil.ContainKeys(dic,i) then
                 local localData=dic[i]
                 if localData~=nil then
                     local heroData=HeroModel:Instance():GetHeroByID(localData.id)
@@ -188,7 +188,7 @@ function BagController:onChangeUid()
 end
 function BagController:onChangeBid(data)
     --设置当前选中英雄uid
-    if ContainKeys(LocalModel:Instance():LoadDeployHeroData(),data.newBid) then
+    if TableUtil.ContainKeys(LocalModel:Instance():LoadDeployHeroData(),data.newBid) then
         self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[data.newBid].uid)
     end
     --选中按钮高光
@@ -263,5 +263,5 @@ end
 --关闭时还原数据逻辑
 function BagController:__closeInit()
     self.bagModel:SetBID(0)
-    self.uid ={}
+    self.bagModel:SetUID(0)
 end

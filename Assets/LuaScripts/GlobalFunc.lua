@@ -1,7 +1,6 @@
 ﻿--关于Unity
 GameObject = CS.UnityEngine.GameObject
 Object = CS.UnityEngine.Object
-Resources = CS.UnityEngine.Resources
 Random=CS.UnityEngine.Random
 Vector2=CS.UnityEngine.Vector2
 Vector3=CS.UnityEngine.Vector3
@@ -71,47 +70,6 @@ function BaseClass(name,base)
         return instance
     end
     return class
-end
-
---工具函数
---表格是否有key
-function ContainKeys(Itable,fkey)
-    if Itable==nil then return end
-    for key,value in pairs(Itable) do
-        if key==fkey then
-            return true
-        end
-    end
-    return false
-end
-
---删除表格指定value
-function RemoveValue(Itable,fvalue)
-    for i=#Itable,1,-1 do
-        if Itable[i].value==fvalue then
-            table.remove(Itable,i)
-        end
-    end
-end
-
---计算表长
-function Lens(Itable)
-    if Itable==nil then return 0 end
-    local count=0
-    for key, value in pairs(Itable) do
-        if value~=nil then
-            count=count+1
-        end
-    end
-    return count
-end
-
---清除表的内容
-function ClearTable(Itable)
-    if Itable==nil or Lens(Itable)==0  then return end
-    for i=Lens(Itable),1,-1 do
-        table.remove(Itable,i)
-      end
 end
 
 function RefreshStars(star,heroData)

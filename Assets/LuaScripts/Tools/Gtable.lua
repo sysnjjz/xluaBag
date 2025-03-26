@@ -1,5 +1,6 @@
 ﻿require("Tools.Stack")
 require("Tools.ObjectPool")
+require("Tools.TableUtil")
 
 require("UI.BasePanel")
 

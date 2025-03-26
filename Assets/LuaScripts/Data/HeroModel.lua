@@ -17,7 +17,7 @@ end
 --加载英雄设定数据
 function HeroModel:LoadHeroList()
     --已经有数据了不用重复读取
-    if Lens(self.heroList)~=0 then return self.heroList end
+    if TableUtil.Lens(self.heroList)~=0 then return self.heroList end
     --调用C#中的函数读取数据
     local heroData=LuaBridge.GetHeroList()
     --没读到数据返回
@@ -38,7 +38,7 @@ end
 
 --得到指定英雄设定数据
 function HeroModel:GetHeroByID(id)
-    if Lens(self.heroList)==0 then
+    if TableUtil.Lens(self.heroList)==0 then
         print("no hero data")
         return nil
     end

@@ -24,11 +24,11 @@ end
 --打开界面方法
 function UIManager:OpenUI(name)
     -- 已打开的界面不打开
-    if ContainKeys(self.panelList,name) then
+    if TableUtil.ContainKeys(self.panelList,name) then
         return
     end
     -- 先找缓存 没有再加载
-    if ContainKeys(self.controllerDict,name) then
+    if TableUtil.ContainKeys(self.controllerDict,name) then
         self.controllerDict[name]:ShowView()
     else
         self.controllerDict[name]=UIConfigDic[name].controller:New(name)
@@ -53,7 +53,7 @@ function UIManager:CloseUI()
         --关闭栈顶元素
         self.panelStack:Peek():CloseView()
         --退出已打开列表 出栈
-        RemoveValue(self.panelList,self.panelStack:Peek().name)
+        TableUtil.RemoveValue(self.panelList,self.panelStack:Peek().name)
         self.panelStack:Pop()
 
         --下方元素可见

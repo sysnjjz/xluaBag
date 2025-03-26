@@ -8,7 +8,7 @@ end
 --抽一次
 function CardModel:OneCard()
     --随机出一个英雄
-    local index=Random.Range(1,Lens(HeroModel:Instance():GetHeroList()))
+    local index=Random.Range(1,TableUtil.Lens(HeroModel:Instance():GetHeroList()))
     index=CS.System.Convert.ToInt32(index)
     local newHero=HeroModel:Instance():GetHeroList()[index]
     --编造一些数据并加入玩家已有英雄列表中
