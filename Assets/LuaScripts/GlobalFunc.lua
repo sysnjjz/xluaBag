@@ -71,14 +71,3 @@ function BaseClass(name,base)
     end
     return class
 end
-
-function RefreshStars(star,heroData)
-    for i=0,star.childCount-1 do
-        local uiStar=star:GetChild(i)
-        if heroData.rarity:GetHashCode()>i then
-            uiStar.gameObject:SetActive(true)
-        else
-            uiStar.gameObject:SetActive(false)
-        end
-    end
-end

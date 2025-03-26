@@ -28,7 +28,7 @@ function CardDetailView:Refresh(heroData)
     --显示姓名
     self.name.text=heroData.name
     --更新星星
-    RefreshStars(self.star,heroData)
+    self:__refreshStars(self.star,heroData);
 end
 
 function CardDetailView:__typeCallBack(res)
@@ -37,4 +37,15 @@ end
 
 function CardDetailView:__heroCallBack(res)
     self.image.sprite= Sprite.Create(res, Rect(0, 0, res.width, res.height), Vector2(0, 0))
+end
+
+function CardDetailView:__refreshStars(star,heroData)
+    for i=0,star.childCount-1 do
+        local uiStar=star:GetChild(i)
+        if heroData.rarity:GetHashCode()>i then
+            uiStar.gameObject:SetActive(true)
+        else
+            uiStar.gameObject:SetActive(false)
+        end
+    end
 end

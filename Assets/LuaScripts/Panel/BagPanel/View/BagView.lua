@@ -168,7 +168,7 @@ function BagView:RefreashHeroDetail(localData,heroData)
     end)
 
     --显示星级
-    RefreshStars(self.star,heroData)
+    self:__refreshStars(self.star,heroData)
 end
 --回调
 function BagView:__heroPrefabCallBack(res)
@@ -176,6 +176,17 @@ function BagView:__heroPrefabCallBack(res)
     showHero.transform.position=Vector3(0,0,0)
     showHero.transform:Rotate(0, 180, 0)
     showHero.transform.localScale=Vector3(900,500,450)
+end
+
+function BagView:__refreshStars(star,heroData)
+    for i=0,star.childCount-1 do
+        local uiStar=star:GetChild(i)
+        if heroData.rarity:GetHashCode()>i then
+            uiStar.gameObject:SetActive(true)
+        else
+            uiStar.gameObject:SetActive(false)
+        end
+    end
 end
 
 -- 恢复初始视图
