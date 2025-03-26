@@ -107,12 +107,29 @@ function LocalModel:GetTypeHeroLocalData(heroType)
     end
     --清空表
     TableUtil.ClearTable(self.tmpTypeList)
-    --查找对应数据并传递出去
+    --查找对应数据
     for k,v in ipairs(self.localDataList) do
         if HeroModel:Instance():GetHeroByID(v.id).type==heroType then
             table.insert(self.tmpTypeList,v)
         end
     end
+    --排序
+    table.sort(self.tmpTypeList,function(a,b)
+        --先按稀有度排序
+        local x=HeroModel:Instance():GetHeroByID(a.id)
+        local y=HeroModel:Instance():GetHeroByID(b.id)
+        if x==nil or y==nil then
+            print("can not get item data")
+            return false
+        end
+
+        --一样的话比较ATK大小
+        if x.rarity:GetHashCode()==y.rarity:GetHashCode() then
+            return a.ATK>b.ATK
+        end
+
+        return x.rarity:GetHashCode()>y.rarity:GetHashCode()
+    end)
     return self.tmpTypeList
 end
 
