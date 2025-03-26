@@ -30,20 +30,11 @@ function BagController:__init(name)
             return self:__createHeroTypeBtn(res)
         end)
 
-        self:__initID()
         self:__refreshShowHero()
     end
 
     --监听器
     self:__setupEventListeners()
-end
-
---英雄背包子控件
-function BagController:__heroCallBack(res)
-    self.heroUIItemPrefab=res
-    --对象池
-    self.heroPool=ObjectPool:New(HeroView,12,self.heroUIItemPrefab,self.view.uiHeroContent.content)
-    self:__refreshHero(HeroType.All)
 end
 
 --控制UI
@@ -86,6 +77,14 @@ function BagController:__createHeroWindow(uid,heroData)
     heroCell:Refresh(uid,heroData)
 end
 
+--生成子控件：英雄背包子控件
+function BagController:__heroCallBack(res)
+    self.heroUIItemPrefab=res
+    --对象池
+    self.heroPool=ObjectPool:New(HeroView,12,self.heroUIItemPrefab,self.view.uiHeroContent.content)
+    self:__refreshHero(HeroType.All)
+end
+
 --生成子控件：上阵英雄子控件
 function BagController:__deployHeroCallBack(res)
     self.heroDeployItem=res
@@ -97,6 +96,7 @@ function BagController:__deployHeroCallBack(res)
         end)
         self.view:AddDeployHero(deployHeroView)
     end
+    self:__initID()
     self:__refreshDeployHero()
 end
 
@@ -106,12 +106,12 @@ function BagController:__createHeroTypeBtn(res)
     --示例配置表
     local config=
     {
-        ["All"]={heroType=HeroType.All,icon="All"},
-        ["Force"]={heroType=HeroType.Force,icon="Force"},
-        ["InnerForce"]={heroType=HeroType.InnerForce,icon="InnerForce"},
-        ["Skill"]={heroType=HeroType.Skill,icon="Skill"},
-        ["Sword"]={heroType=HeroType.Sword,icon="Sword"},
-        ["Heal"]={heroType=HeroType.Heal,icon="Heal"}
+        [1]={name="All",heroType=HeroType.All,icon="All"},
+        [2]={name="Force",heroType=HeroType.Force,icon="Force"},
+        [3]={name="InnerForce",heroType=HeroType.InnerForce,icon="InnerForce"},
+        [4]={name="Skill",heroType=HeroType.Skill,icon="Skill"},
+        [5]={name="Sword",heroType=HeroType.Sword,icon="Sword"},
+        [6]={name="Heal",heroType=HeroType.Heal,icon="Heal"}
     }
     --生成上阵英雄按钮添加到页面里
     for k,v in pairs(config) do
@@ -119,6 +119,17 @@ function BagController:__createHeroTypeBtn(res)
         newBtn:AddEventListener("changeShowHero",function(heroType)
             self:__refreshHero(heroType)
         end)
+    end
+end
+
+--初始化选中id
+function BagController:__initID()
+    --设置当前选择展示的英雄的uid 默认展示第一位已上阵英雄 没有第一位已上阵英雄就展示用户背包中权重最高的英雄
+    if ContainKeys(LocalModel:Instance():LoadDeployHeroData(),1) and LocalModel:Instance():LoadDeployHeroData()[1]~=nil then
+        self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[1].uid)
+        self.bagModel:SetBID(1)
+    elseif Lens(LocalModel:Instance():GetSortedHeroLocalData()) ~= 0 then
+        self.bagModel:SetUID(LocalModel:Instance():GetSortedHeroLocalData()[1].uid)
     end
 end
 -----------------------------------------------初始化设置结束-------------------------------------------------
@@ -133,18 +144,7 @@ function BagController:RefreshUI()
     self:__refreshShowHero()
 end
 
---初始化选中id
-function BagController:__initID()
-    --设置当前选择展示的英雄的uid 默认展示第一位已上阵英雄 没有第一位已上阵英雄就展示用户背包中权重最高的英雄
-    if ContainKeys(LocalModel:Instance():LoadDeployHeroData(),1) and LocalModel:Instance():LoadDeployHeroData()[1]~=nil then
-        self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[1].uid)
-        self.bagModel:SetBID(1)
-    elseif Lens(LocalModel:Instance():GetSortedHeroLocalData()) ~= 0 then
-        self.bagModel:SetUID(LocalModel:Instance():GetSortedHeroLocalData()[1].uid)
-    end
-end
-
---初始化上阵英雄栏
+--刷新上阵英雄栏
 function BagController:__refreshDeployHero()
     --上阵英雄不为空
     local dic=LocalModel:Instance():LoadDeployHeroData()
