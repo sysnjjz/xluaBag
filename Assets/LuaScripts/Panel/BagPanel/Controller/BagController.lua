@@ -142,6 +142,7 @@ function BagController:RefreshUI()
     self:__refreshDeployHero()
     self:__refreshHero(HeroType.All)
     self:__refreshShowHero()
+    self.view:InitPage()
 end
 
 --À¢–¬…œ’Û”¢–€¿∏

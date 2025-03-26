@@ -60,6 +60,10 @@ function BagView:__initUI()
     self.uiDeployList=self.transform:Find("Deploy/DeployList")
     self.uiDeployBtnArr={}
 
+    self:InitPage()
+end
+
+function BagView:InitPage()
     --页面初始化
     self.uiCodex.gameObject:SetActive(false)
     self.uiHeroBag.gameObject:SetActive(true)
