@@ -1,8 +1,8 @@
 ﻿--这里应该是接收服务端的数据 但是为了模拟就直接从本地里读了
-
 LocalModel = BaseClass("LocalModel")
+
 -- 初始化函数
-function LocalModel:__init(params)
+function LocalModel:__init()
     --存取框架
     --玩家拥有的英雄列表
     self.localDataList={}
@@ -22,7 +22,7 @@ end
 
 --加载玩家已有英雄
 --预加载逻辑
-function LocalModel:PreLoadHeroData()
+function LocalModel:LoadHeroData()
     --已经有数据了不用重复读取
     if TableUtil.Lens(self.localDataList)~=0 then return self.localDataList end
     --调用C#中的函数读取数据
@@ -39,7 +39,7 @@ function LocalModel:PreLoadHeroData()
 end
 
 --获取玩家已有英雄
-function LocalModel:LoadHeroData()
+function LocalModel:GetHeroData()
     return self.localDataList
 end
 
@@ -80,21 +80,20 @@ function LocalModel:GetSortedHeroLocalData()
     --排序
     table.sort(self.localDataList,function(a,b)
         --先按稀有度排序
-        local x=self:GetLocalItemDataByUid(a.uid)
-        local y=self:GetLocalItemDataByUid(b.uid)
+        local x=HeroModel:Instance():GetHeroByID(a.id)
+        local y=HeroModel:Instance():GetHeroByID(b.id)
         if x==nil or y==nil then
             print("can not get item data")
             return false
         end
 
-        --一样的话比较id大小
-        if x.rarity==y.rarity then
-            return x.id>y.id
+        --一样的话比较ATK大小
+        if x.rarity:GetHashCode()==y.rarity:GetHashCode() then
+            return a.ATK>b.ATK
         end
 
-        return x.rarity>y.rarity
-    end)
-
+        return x.rarity:GetHashCode()>y.rarity:GetHashCode()
+        end)
     return self.localDataList
 end
 
@@ -135,7 +134,7 @@ end
 
 --加载玩家已有英雄
 --预加载逻辑
-function LocalModel:PreLoadDeployHeroData()
+function LocalModel:LoadDeployHeroData()
     --已经有数据了不用重复读取
     if TableUtil.Lens(self.deployHeroDic)~=0 then return self.deployHeroDic end
     --调用C#中的函数读取数据
@@ -152,7 +151,7 @@ function LocalModel:PreLoadDeployHeroData()
 end
 
 --获取玩家已上阵英雄
-function LocalModel:LoadDeployHeroData()
+function LocalModel:GetDeployHeroData()
     return self.deployHeroDic
 end
 
@@ -172,6 +171,6 @@ end
 
 --清除上阵英雄
 function LocalModel:ClearDeployHero()
-    self.deployHeroDic={}
+    TableUtil.ClearTable(self.deployHeroDic)
     self:SaveDeployHeroData()
 end

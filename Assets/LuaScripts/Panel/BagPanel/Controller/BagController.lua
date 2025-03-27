@@ -35,13 +35,11 @@ function BagController:ShowView()
             CS.AsyncMgr.Instance:LoadAsync("TypeBtn", function(res)
                 return self:__createHeroTypeBtn(res)
             end)
-    
-            --监听器
-            self:__setupEventListeners()
+            
             self:__refreshShowHero()
         end
     end
-    self.view:OpenPanel("Bag",UIManager:Instance().uiRoot)
+    self.view:OpenPanel("Bag",UIManager:Instance().uiRoot,self)
 end
 
 --控制UI
@@ -50,23 +48,6 @@ function BagController:CloseView()
 end
 
 ------------------------------------------------初始化设置--------------------------------------------------
--- 设置事件监听器
-function BagController:__setupEventListeners()
-    --view
-    --关闭界面
-    self.view:AddEventListener("closePanel",function()
-        self:__closePanel()
-    end)
-    --背包栏显示不同属性的英雄
-    self.view:AddEventListener("changeShowHero",function(heroType)
-        self:__refreshHero(heroType)
-    end)
-    --点击上阵按钮 刷新上阵英雄栏展示
-    self.view:AddEventListener("updateDeployHero",function()
-        self:__updateDeployHero()
-    end)
-end
-
 --生成子控件：英雄背包中的英雄卡片 并注册回调
 function BagController:__createHeroWindow(uid,heroData)
     local heroCell=self.heroPool:GetObject(self.heroUIItemPrefab,self.view.uiHeroContent.content)
@@ -127,8 +108,8 @@ end
 --初始化选中id
 function BagController:__initID()
     --设置当前选择展示的英雄的uid 默认展示第一位已上阵英雄 没有第一位已上阵英雄就展示用户背包中权重最高的英雄
-    if TableUtil.ContainKeys(LocalModel:Instance():LoadDeployHeroData(),1) and LocalModel:Instance():LoadDeployHeroData()[1]~=nil then
-        self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[1].uid)
+    if TableUtil.ContainKeys(LocalModel:Instance():GetDeployHeroData(),1) and LocalModel:Instance():GetDeployHeroData()[1]~=nil then
+        self.bagModel:SetUID(LocalModel:Instance():GetDeployHeroData()[1].uid)
         self.bagModel:SetBID(1)
     elseif TableUtil.Lens(LocalModel:Instance():GetSortedHeroLocalData()) ~= 0 then
         self.bagModel:SetUID(LocalModel:Instance():GetSortedHeroLocalData()[1].uid)
@@ -150,7 +131,7 @@ end
 --刷新上阵英雄栏
 function BagController:__refreshDeployHero()
     --上阵英雄不为空
-    local dic=LocalModel:Instance():LoadDeployHeroData()
+    local dic=LocalModel:Instance():GetDeployHeroData()
     if TableUtil.Lens(dic)~=0 then
         for i=1,5 do
             --如果该位置上有上阵英雄 刷新视图
@@ -191,8 +172,8 @@ function BagController:onChangeUid()
 end
 function BagController:onChangeBid(data)
     --设置当前选中英雄uid
-    if TableUtil.ContainKeys(LocalModel:Instance():LoadDeployHeroData(),data.newBid) then
-        self.bagModel:SetUID(LocalModel:Instance():LoadDeployHeroData()[data.newBid].uid)
+    if TableUtil.ContainKeys(LocalModel:Instance():GetDeployHeroData(),data.newBid) then
+        self.bagModel:SetUID(LocalModel:Instance():GetDeployHeroData()[data.newBid].uid)
     end
     --选中按钮高光
     self.view:ChangeLightingButton(data.oldBid, data.newBid)

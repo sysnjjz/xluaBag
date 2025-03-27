@@ -1,6 +1,6 @@
 ﻿GMCommand = BaseClass("GMCommand")
 -- 初始化函数
-function GMCommand:__init(params)
+function GMCommand:__init()
 
 end
 

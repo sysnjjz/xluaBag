@@ -8,22 +8,14 @@ function UIManager:Instance()
 end  
 
 -- 初始化函数
-function UIManager:__init(params)
+function UIManager:__init()
     ---初始化参数
     --根ui
     self.uiRoot=GameObject.Find("Canvas").transform
-    --页面控制器缓存字典
-    self.controllerDict={}
     --已打开页面列表 只存名字
     self.panelList={}
     --打开中的界面栈
     self.panelStack=Stack:Create()
-
-    --打开并缓存所有controller
-    for k,v in pairs(UIConfigDic) do
-        self.controllerDict[v.name]=v.controller:Instance(name)
-    end
-
 end
 
 -- 打开界面
@@ -34,20 +26,20 @@ function UIManager:OpenUI(name)
         return
     end
     -- 先找缓存 没有再加载
-    if TableUtil.ContainKeys(self.controllerDict,name) then
-        self.controllerDict[name]:ShowView()
+    if TableUtil.ContainKeys(controllerDict,name) then
+        controllerDict[name]:ShowView()
     else
-        self.controllerDict[name]=UIConfigDic[name].controller:Instance(name)
-        self.controllerDict[name]:ShowView()
+        controllerDict[name]=UIConfigDic[name].controller:Instance()
+        controllerDict[name]:ShowView()
     end
     --刷新界面
-    self.controllerDict[name]:RefreshUI()
+    controllerDict[name]:RefreshUI()
     --下层界面不可见
     if self.panelStack:Peek()~=nil then
         self.panelStack:Peek():CloseView()
     end
     --压栈 加入已打开列表
-    self.panelStack:Push(self.controllerDict[name])
+    self.panelStack:Push(controllerDict[name])
     table.insert(self.panelList,name)
 end
 

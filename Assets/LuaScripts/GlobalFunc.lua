@@ -53,7 +53,6 @@ function BaseClass(name,base)
     --构造函数
     function class:New(...)
         local instance={}
-        --setmetatable(instance,{__index=class})
         setmetatable(instance, {__index = deepCopy(class)})
         --递归实现初始化
         local initialize

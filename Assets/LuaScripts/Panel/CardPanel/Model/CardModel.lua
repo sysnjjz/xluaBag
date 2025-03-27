@@ -22,7 +22,7 @@ function CardModel:OneCard()
         HP=math.floor(Random.Range(4,8)*100),
         Defence=math.floor(Random.Range(2,6)*100)
     }
-    table.insert(LocalModel:Instance():LoadHeroData(),newLocalData)
+    table.insert(LocalModel:Instance():GetHeroData(),newLocalData)
     LocalModel:Instance():SaveHeroData()
 
     return newHero

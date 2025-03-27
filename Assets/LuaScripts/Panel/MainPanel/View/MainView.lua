@@ -1,14 +1,4 @@
 ﻿MainView = BaseClass("MainView",BasePanel)
--- 初始化函数
-function MainView:__init()
-    self.uiRoot=nil
-    self.haveLoaded=false
-    self.isDoneLoading=false
-    self.controlPanel=nil
-    self.transform=nil
-    -- 事件监听
-    self.eventListeners={}
-end
 
 --重写回调
 function MainView:__callBack(res)
@@ -25,32 +15,14 @@ function MainView:__callBack(res)
 
     -- 绑定事件
     self.btmCard.onClick:AddListener(function()
-        self:__triggerEvent("openCard")
+        UIManager:Instance():OpenUI("Card")
     end)
     self.btmExit.onClick:AddListener(function()
-        self:__triggerEvent("exit")
+        LuaBridge.ExitApplication()
     end)
     self.btmBag.onClick:AddListener(function()
-        self:__triggerEvent("openBag")
+        UIManager:Instance():OpenUI("Bag")
     end)
-    
-    self.isDoneLoading=true
-    if self.OnViewLoaded then
-        self.OnViewLoaded()
-    end
 
     return true
-end
-
--- 注册事件监听器
-function MainView:AddEventListener(event, callback)
-    self.eventListeners[event] = callback
-end
-
--- 触发事件
-function MainView:__triggerEvent(event, data)
-    local callback = self.eventListeners[event]
-    if callback then
-        callback(data)
-    end
 end

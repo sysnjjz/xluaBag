@@ -1,15 +1,4 @@
 ﻿BagView = BaseClass("BagView",BasePanel)
--- 初始化函数
-function BagView:__init()
-    self.uiRoot=nil
-    self.haveLoaded=false
-    self.isDoneLoading=false
-    self.controlPanel=nil
-    self.transform=nil
-    --基本属性
-    self.eventListeners={}
-    --self:Load(name,UIManager:Instance().uiRoot) 
-end
 
 function BagView:__callBack(res)
     self.controlPanel=GameObject.Instantiate(res,self.uiRoot)
@@ -18,6 +7,7 @@ function BagView:__callBack(res)
 
     self:__initUI()
     self:__initButton()
+    self:__addListener()
 
     self.isDoneLoading=true
     if self.OnViewLoaded then
@@ -25,6 +15,22 @@ function BagView:__callBack(res)
     end
 end
 
+--打开界面
+function BagView:OpenPanel(name,uiRoot,ctrl)
+    self.ctrl=ctrl
+    --既没加载过也没加载完
+    if self.haveLoaded == false and self.isDoneLoading == false then
+        --加载
+        self:Load(name,uiRoot)
+        return
+    --加载了但没加载完 什么都不做
+    elseif self.haveLoaded == true and self.isDoneLoading == false then
+        return
+    --加载过也加载完了
+    else
+        self.controlPanel:SetActive(true)
+    end
+end
 
 -- ui初始化
 function BagView:__initUI()
@@ -108,17 +114,19 @@ function BagView:__initButton()
     end)
 end
 
--- 注册事件监听器
-function BagView:AddEventListener(event, callback)
-    self.eventListeners[event] = callback
-end
-
--- 触发事件
-function BagView:__triggerEvent(event, data)
-    local callback = self.eventListeners[event]
-    if callback then
-        callback(data)
-    end
+function BagView:__addListener()
+    --关闭界面
+    self:AddEventListener("closePanel",function()
+        self.ctrl:__closePanel()
+    end)
+    --背包栏显示不同属性的英雄
+    self:AddEventListener("changeShowHero",function(heroType)
+        self.ctrl:__refreshHero(heroType)
+    end)
+    --点击上阵按钮 刷新上阵英雄栏展示
+    self:AddEventListener("updateDeployHero",function()
+        self.ctrl:__updateDeployHero()
+    end)
 end
 
 --添加子控件到按钮队列中

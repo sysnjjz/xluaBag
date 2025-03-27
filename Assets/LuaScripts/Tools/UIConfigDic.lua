@@ -1,7 +1,7 @@
-﻿--name resources下的path controller
+﻿--name controller
 UIConfigDic = 
 {
-    ["Main"]={name="Main",controller=MainController},
-    ["Card"]={name="Card",controller=CardController},
-    ["Bag"]={name="Bag",controller=BagController}
+    ["Main"]={controller=MainController},
+    ["Card"]={controller=CardController},
+    ["Bag"]={controller=BagController}
 }

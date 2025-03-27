@@ -1,6 +1,6 @@
 ﻿TableUtil = BaseClass("TableUtil")
 -- 初始化函数
-function TableUtil:__init(params)
+function TableUtil:__init()
 end
 
 --工具函数

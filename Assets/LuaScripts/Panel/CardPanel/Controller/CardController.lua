@@ -9,6 +9,8 @@ end
 
 -- 初始化函数
 function CardController:__init(name)
+    self.name=name
+    
     --初始化view和module
     self.view=nil
     self.model=CardModel:New(self)

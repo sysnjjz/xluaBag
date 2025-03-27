@@ -19,43 +19,10 @@ function MainController:RefreshUI()
 
 end
 
--- 设置监听器
-function MainController:__setupEventListeners()
-    --界面
-    self.view:AddEventListener("openCard", function()
-        self:__openCard()
-    end)
-    self.view:AddEventListener("exit", function()
-        self:__exit()
-    end)
-    self.view:AddEventListener("openBag", function()
-        self:__openBag()
-    end)
-end
-
---按键方法：打开抽卡界面
-function MainController:__openCard()
-    UIManager:Instance():OpenUI("Card")
-end
-
---按键方法：打开背包界面
-function MainController:__openBag()
-    UIManager:Instance():OpenUI("Bag")
-end
-
---按键方法：退出游戏
-function MainController:__exit()
-    LuaBridge.ExitApplication()
-end
-
 --控制UI
 function MainController:ShowView()
     if self.view == nil then
         self.view=MainView:New()
-        self.view.OnViewLoaded=function()            
-            --监听器
-            self:__setupEventListeners()
-        end
     end
     self.view:OpenPanel("Main",UIManager:Instance().uiRoot)
 end

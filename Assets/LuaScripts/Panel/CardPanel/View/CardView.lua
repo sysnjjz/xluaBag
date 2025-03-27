@@ -1,16 +1,4 @@
 ﻿CardView = BaseClass("CardView",BasePanel)
--- 初始化函数
-function CardView:__init()
-    self.uiRoot=nil
-    self.haveLoaded=false
-    self.isDoneLoading=false
-    self.controlPanel=nil
-    self.transform=nil
-    --基本属性
-    self.eventListeners={}
-
-    --self:Load(name,UIManager:Instance().uiRoot)  
-end
 
 --重载加载函数
 function CardView:AsyncLoad(name)
@@ -72,19 +60,6 @@ function CardView:__loadCallBack(res)
     self.cardDetail = res
     --对象池
     self.cardPool=ObjectPool:New(CardDetailView,10,self.cardDetail,self.cardList)
-end
-
--- 注册事件监听器
-function CardView:AddEventListener(event, callback)
-    self.eventListeners[event] = callback
-end
-
--- 触发事件
-function CardView:__triggerEvent(event, data)
-    local callback = self.eventListeners[event]
-    if callback then
-        callback(data)
-    end
 end
 
 --清除卡牌
