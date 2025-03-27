@@ -1,8 +1,8 @@
 BagController = BaseClass("BagController")
 --单例
-function BagController:Instance(basePanel)  
+function BagController:Instance(name)  
     if self.instance == nil then  
-        self.instance = self:New(basePanel)  
+        self.instance = self:New(name)  
     end  
     return self.instance  
 end  
@@ -12,34 +12,36 @@ function BagController:__init(name)
     self.name=name
 
     -- view model
-    self.view=BagView:New(name)
+    self.view=nil
     self.bagModel=BagModel:New(self)
-
-    --页面加载完成后加载子控件
-    self.view.OnViewLoaded=function()
-        --英雄背包子控件
-        CS.AsyncMgr.Instance:LoadAsync("HeroDetail", function(res)
-            return self:__heroCallBack(res)
-        end)
-        --上阵英雄子控件
-        CS.AsyncMgr.Instance:LoadAsync("DeployHero", function(res)
-            return self:__deployHeroCallBack(res)
-        end)
-        --英雄类型子控件
-        CS.AsyncMgr.Instance:LoadAsync("TypeBtn", function(res)
-            return self:__createHeroTypeBtn(res)
-        end)
-
-        self:__refreshShowHero()
-    end
-
-    --监听器
-    self:__setupEventListeners()
 end
 
 --控制UI
 function BagController:ShowView()
-    self.view:OpenPanel()
+    if self.view == nil then
+        self.view=BagView:New()
+        --页面加载完成后加载子控件
+        self.view.OnViewLoaded=function()
+            --英雄背包子控件
+            CS.AsyncMgr.Instance:LoadAsync("HeroDetail", function(res)
+                return self:__heroCallBack(res)
+            end)
+    
+            --上阵英雄子控件
+            CS.AsyncMgr.Instance:LoadAsync("DeployHero", function(res)
+                return self:__deployHeroCallBack(res)
+            end)
+            --英雄类型子控件
+            CS.AsyncMgr.Instance:LoadAsync("TypeBtn", function(res)
+                return self:__createHeroTypeBtn(res)
+            end)
+    
+            --监听器
+            self:__setupEventListeners()
+            self:__refreshShowHero()
+        end
+    end
+    self.view:OpenPanel("Bag",UIManager:Instance().uiRoot)
 end
 
 --控制UI
@@ -137,7 +139,7 @@ end
 ------------------------------------------------页面刷新逻辑-------------------------------------------------
 --页面刷新逻辑 每次生成界面时调用
 function BagController:RefreshUI()
-    if self.view.isDoneLoading == nil or false then return end
+    if self.view.isDoneLoading == nil or self.view.isDoneLoading == false then return end
     self:__initID()
     self:__refreshDeployHero()
     self:__refreshHero(HeroType.All)

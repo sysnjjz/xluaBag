@@ -1,11 +1,15 @@
 ﻿CardView = BaseClass("CardView",BasePanel)
 -- 初始化函数
-function CardView:__init(name)
+function CardView:__init()
+    self.uiRoot=nil
+    self.haveLoaded=false
+    self.isDoneLoading=false
+    self.controlPanel=nil
+    self.transform=nil
     --基本属性
     self.eventListeners={}
 
-    self:Load(name,UIManager:Instance().uiRoot)
-    
+    --self:Load(name,UIManager:Instance().uiRoot)  
 end
 
 --重载加载函数

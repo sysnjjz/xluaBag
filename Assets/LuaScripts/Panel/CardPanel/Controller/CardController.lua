@@ -1,8 +1,8 @@
 ﻿CardController = BaseClass("CardController")
 --单例
-function CardController:Instance()  
+function CardController:Instance(name)  
     if self.instance == nil then  
-        self.instance = self:New()  
+        self.instance = self:New(name)  
     end  
     return self.instance  
 end 
@@ -10,16 +10,13 @@ end
 -- 初始化函数
 function CardController:__init(name)
     --初始化view和module
-    self.view=CardView:New(name)
+    self.view=nil
     self.model=CardModel:New(self)
-
-    --监听器
-    self:__setupEventListeners()
 end
 
 --页面刷新逻辑
 function CardController:RefreshUI()
-    if self.view.isDoneLoading == nil or false then return end
+    if self.view.isDoneLoading == nil or self.view.isDoneLoading == false then return end
     self.view:ClearCard()
 end
 
@@ -53,7 +50,14 @@ end
 
 --控制UI
 function CardController:ShowView()
-    self.view:OpenPanel()
+    if self.view == nil then
+        self.view=CardView:New()
+        self.view.OnViewLoaded=function()            
+            --监听器
+            self:__setupEventListeners()
+        end
+    end
+    self.view:OpenPanel("Card",UIManager:Instance().uiRoot)
 end
 
 --控制UI

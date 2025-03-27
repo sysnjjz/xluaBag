@@ -32,7 +32,7 @@ function deepCopy(object)
         local newTable = {}
         savedTable[object] = newTable
         for key, value in pairs(object) do
-            --递归调用 对每一张表做深拷贝s
+            --递归调用 对每一张表做深拷贝
             newTable[copyObj(key)] = copyObj(value)
         end
         --新表与原表元表一致
@@ -66,7 +66,7 @@ function BaseClass(name,base)
             end
         end
         --初始化
-        initialize(instance,...)
+        initialize(instance,...) 
         return instance
     end
     return class

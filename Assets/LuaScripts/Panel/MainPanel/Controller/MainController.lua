@@ -10,11 +10,8 @@ end
 -- 初始化函数
 function MainController:__init(name)
     --初始化view和module
-    self.view=MainView:New(name)
-    self.model=MainModel:New()
-
-    --设置监听器
-    self:__setupEventListeners()
+    self.view=nil
+    self.model=MainModel:New(self)
 end
 
 --页面刷新逻辑
@@ -53,7 +50,14 @@ end
 
 --控制UI
 function MainController:ShowView()
-    self.view:OpenPanel()
+    if self.view == nil then
+        self.view=MainView:New()
+        self.view.OnViewLoaded=function()            
+            --监听器
+            self:__setupEventListeners()
+        end
+    end
+    self.view:OpenPanel("Main",UIManager:Instance().uiRoot)
 end
 
 --控制UI

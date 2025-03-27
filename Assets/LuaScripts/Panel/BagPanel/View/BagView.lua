@@ -1,10 +1,14 @@
 ﻿BagView = BaseClass("BagView",BasePanel)
 -- 初始化函数
-function BagView:__init(name)
+function BagView:__init()
+    self.uiRoot=nil
+    self.haveLoaded=false
+    self.isDoneLoading=false
+    self.controlPanel=nil
+    self.transform=nil
     --基本属性
     self.eventListeners={}
-    self.OnViewLoaded = nil
-    self:Load(name,UIManager:Instance().uiRoot) 
+    --self:Load(name,UIManager:Instance().uiRoot) 
 end
 
 function BagView:__callBack(res)

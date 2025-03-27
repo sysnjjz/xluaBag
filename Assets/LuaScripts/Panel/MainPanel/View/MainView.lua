@@ -1,11 +1,13 @@
 ﻿MainView = BaseClass("MainView",BasePanel)
 -- 初始化函数
-function MainView:__init(name)
+function MainView:__init()
+    self.uiRoot=nil
+    self.haveLoaded=false
+    self.isDoneLoading=false
+    self.controlPanel=nil
+    self.transform=nil
     -- 事件监听
     self.eventListeners={}
-
-    --加载界面
-    self:Load(name,UIManager:Instance().uiRoot)
 end
 
 --重写回调
@@ -31,6 +33,12 @@ function MainView:__callBack(res)
     self.btmBag.onClick:AddListener(function()
         self:__triggerEvent("openBag")
     end)
+    
+    self.isDoneLoading=true
+    if self.OnViewLoaded then
+        self.OnViewLoaded()
+    end
+
     return true
 end
 

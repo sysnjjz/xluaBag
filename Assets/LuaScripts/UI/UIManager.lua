@@ -18,6 +18,12 @@ function UIManager:__init(params)
     self.panelList={}
     --打开中的界面栈
     self.panelStack=Stack:Create()
+
+    --打开并缓存所有controller
+    for k,v in pairs(UIConfigDic) do
+        self.controllerDict[v.name]=v.controller:Instance(name)
+    end
+
 end
 
 -- 打开界面
@@ -31,7 +37,8 @@ function UIManager:OpenUI(name)
     if TableUtil.ContainKeys(self.controllerDict,name) then
         self.controllerDict[name]:ShowView()
     else
-        self.controllerDict[name]=UIConfigDic[name].controller:New(name)
+        self.controllerDict[name]=UIConfigDic[name].controller:Instance(name)
+        self.controllerDict[name]:ShowView()
     end
     --刷新界面
     self.controllerDict[name]:RefreshUI()

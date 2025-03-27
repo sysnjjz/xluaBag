@@ -3,6 +3,7 @@
 -- 初始化函数
 function BasePanel:__init(params)
     self.uiRoot=nil
+    self.haveLoaded=false
     self.isDoneLoading=false
     self.controlPanel=nil
     self.transform=nil
@@ -10,6 +11,7 @@ end
 
 -- 打开界面
 function BasePanel:Load(name,uiRoot)
+    self.haveLoaded=true
     self.uiRoot=uiRoot
 
     --加载界面
@@ -33,9 +35,16 @@ function BasePanel:__callBack(res)
 end
 
 --打开界面
-function BasePanel:OpenPanel()
-    if self.isDoneLoading == false then
+function BasePanel:OpenPanel(name,uiRoot)
+    --既没加载过也没加载完
+    if self.haveLoaded == false and self.isDoneLoading == false then
+        --加载
+        self:Load(name,uiRoot)
         return
+    --加载了但没加载完 什么都不做
+    elseif self.haveLoaded == true and self.isDoneLoading == false then
+        return
+    --加载过也加载完了
     else
         self.controlPanel:SetActive(true)
     end
