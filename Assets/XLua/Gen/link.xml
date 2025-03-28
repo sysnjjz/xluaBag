@@ -4,6 +4,7 @@
 
 	<assembly fullname="Assembly-CSharp">
 	    <type fullname="AsyncMgr" preserve="all"/>
+		<type fullname="IOUtils" preserve="all"/>
 		<type fullname="LuaBridge" preserve="all"/>
 		<type fullname="Tutorial.BaseClass" preserve="all"/>
 		<type fullname="Tutorial.TestEnum" preserve="all"/>

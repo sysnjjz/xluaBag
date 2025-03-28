@@ -10,6 +10,8 @@ function LocalModel:__init()
     self.deployHeroDic={}
     --临时表
     self.tmpTypeList={}
+    --监听器
+    self.eventListeners={}
 end
 
 --单例
@@ -19,6 +21,19 @@ function LocalModel:Instance()
     end  
     return self.instance  
 end  
+
+-- 注册事件监听器
+function LocalModel:AddEventListener(event, callback)
+    self.eventListeners[event] = callback
+end
+
+-- 触发事件
+function LocalModel:__triggerEvent(event, data)
+    local callback = self.eventListeners[event]
+    if callback then
+        callback(data)
+    end
+end
 
 --加载玩家已有英雄
 --预加载逻辑
@@ -161,12 +176,19 @@ function LocalModel:SaveDeployHeroData()
 end
 
 --添加上阵英雄
-function LocalModel:AddDeployHero(localData,heroData)
+function LocalModel:AddDeployHero(uid)
+    local localData=self:GetLocalItemDataByUid(uid)
+    if localData ==nil or localData.isDeploy ==true then
+        self:__triggerEvent("refreshDeployHero",{["success"]=false})
+        return
+    end
+    local heroData=HeroModel:Instance():GetHeroByID(localData.id)
     --只在对应的位置上阵该类型英雄
     local place = heroData.type:GetHashCode()+1 --CS里写的枚举是从0开始的
     self.deployHeroDic[place]=localData
     self:SaveDeployHeroData()
-    return place
+    --给view发事件
+    self:__triggerEvent("refreshDeployHero",{["success"]=true,["place"]=place,["localData"]=localData,["heroData"]=heroData})
 end
 
 --清除上阵英雄

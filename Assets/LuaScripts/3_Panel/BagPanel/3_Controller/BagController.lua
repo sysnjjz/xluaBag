@@ -149,6 +149,7 @@ function BagController:__refreshDeployHero()
     else
         --»Ö¸´Ä¬ÈÏÍ¼Ïñ
         for i=1,5 do
+            print("in")
             self.view.uiDeployBtnArr[i]:RefreshNull()
         end
     end

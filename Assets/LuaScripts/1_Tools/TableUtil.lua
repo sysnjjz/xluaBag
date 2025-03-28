@@ -39,7 +39,7 @@ end
 --清除表的内容
 function TableUtil.ClearTable(Itable)
     if Itable==nil or TableUtil.Lens(Itable)==0  then return end
-    for i=TableUtil.Lens(Itable),1,-1 do
-        table.remove(Itable,i)
-      end
+    for k in pairs(Itable) do
+        Itable[k] = nil
+    end
 end

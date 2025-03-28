@@ -1,4 +1,9 @@
-﻿require("Tools.Gtable")
+﻿-- require("Tools.Gtable")
+
+--加载模块
+require("RequireUtils")
+requireModule()
+-- CS.IOUtils.luaCallRequire()
 
 --数据初始化
 HeroModel:Instance():LoadHeroList()

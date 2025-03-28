@@ -88,7 +88,7 @@ function BagView:__initButton()
 
     --更新上阵英雄
     self.uiUPBtn.onClick:AddListener(function()
-        self:__triggerEvent("updateDeployHero")
+        self:__upDeployHero()
     end)
 
     --注册按键事件 不需要controller做的
@@ -123,10 +123,27 @@ function BagView:__addListener()
     self:AddEventListener("changeShowHero",function(heroType)
         self.ctrl:__refreshHero(heroType)
     end)
-    --点击上阵按钮 刷新上阵英雄栏展示
-    self:AddEventListener("updateDeployHero",function()
-        self.ctrl:__updateDeployHero()
+    --和model互相监听
+    self:AddEventListener("upDeployHero",function(uid)
+        LocalModel:Instance():AddDeployHero(uid)
     end)
+    LocalModel:Instance():AddEventListener("refreshDeployHero",function(data)
+        self:__downDeployHero(data)
+    end
+    )
+end
+
+--点击上阵按键：添加上阵英雄
+function BagView:__upDeployHero()
+    self:__triggerEvent("upDeployHero",self.ctrl.bagModel:GetUID())
+end
+
+function BagView:__downDeployHero(data)
+    --根据是否成功刷新页面
+    if data.success then
+        self.uiDeployBtnArr[data.place]:Refresh(data.localData,data.heroData)
+        self.ctrl.bagModel:SetBID(data.place)
+    end
 end
 
 --添加子控件到按钮队列中

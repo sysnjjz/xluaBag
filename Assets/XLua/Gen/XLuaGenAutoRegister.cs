@@ -25,6 +25,9 @@ namespace XLua.CSObjectWrap
             translator.DelayWrapLoader(typeof(AsyncMgr), AsyncMgrWrap.__Register);
         
         
+            translator.DelayWrapLoader(typeof(IOUtils), IOUtilsWrap.__Register);
+        
+        
             translator.DelayWrapLoader(typeof(LuaBridge), LuaBridgeWrap.__Register);
         
         
